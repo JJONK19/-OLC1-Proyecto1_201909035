@@ -1,0 +1,97 @@
+package Analizador;
+import java_cup.runtime.Symbol;
+import Aplicacion.Errores;
+
+parser code {:
+    /*Method that is called when parser can be recovered*/
+	public void syntax_error(Symbol s){
+        System.out.println("Este es un error de sintaxis:"+s.value + ". Localizado en Fila"+ (s.right+1) +"y Columna "+(s.left+1));
+        Errores crear = new Errores("Error sintaxix", s.value.toString(), s.right+1, s.left+1);
+    }
+
+	/*Method that is called when parser can't be recovered*/
+	public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+        System.out.println("Este es un error de sintaxis:"+s.value + ". Localizado en Fila"+ (s.right+1) +"y Columna "+(s.left+1) + ". No se pudo recuperar.");
+        Errores crear = new Errores("Error sintaxix", s.value.toString(), s.right+1, s.left+1);
+
+    }
+
+:}
+
+terminal porcentaje, conjunto, concatenacion, or, kleene, positiva, cerouno, guion, cierre, apertura, coma, dospuntos, puntocoma;
+terminal cadena, digito, letra, simbolo, flecha, id, especial;
+
+non terminal  SO, CONTENIDO, DECLARACION, VALIDAR, CONJUNTO, EXPRESION, NOT, GRUPO, VAL, SYM, E, OTROS, BINARIO, UNARIO;
+
+start with SO;
+
+SO ::= apertura CONTENIDO cierre
+;
+
+CONTENIDO ::= DECLARACION porcentaje porcentaje porcentaje porcentaje VALIDAR
+;
+
+DECLARACION ::= CONJUNTO DECLARACION
+                |EXPRESION DECLARACION
+                |CONJUNTO
+                |EXPRESION
+;
+
+EXPRESION ::= id flecha E puntocoma
+;
+
+E ::= BINARIO E E
+      |UNARIO E
+      |apertura id cierre
+      |OTROS
+;
+
+VALIDAR ::= id dospuntos cadena puntocoma VALIDAR
+            |id dospuntos cadena puntocoma
+;
+
+CONJUNTO ::= conjunto dospuntos id flecha NOT puntocoma
+;
+
+NOT ::= letra guion letra
+        |digito guion digito
+        |SYM guion SYM
+        |GRUPO
+;
+
+VAL ::= letra
+        |digito
+        |SYM
+;
+
+GRUPO ::= VAL coma GRUPO
+          |VAL
+;
+
+SYM ::= simbolo
+        |porcentaje
+        |concatenacion
+        |or
+        |kleene
+        |positiva
+        |cerouno
+;
+
+OTROS ::= cadena
+          |especial
+          |letra
+          |digito
+;
+
+BINARIO ::= concatenacion
+            |or
+;
+
+UNARIO  ::= kleene
+            |positiva
+            |cerouno
+;
+
+
+
+
