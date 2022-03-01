@@ -7,6 +7,7 @@ package Analizador;
 
 import java_cup.runtime.Symbol;
 import Aplicacion.Errores;
+import java.util.ArrayList;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -193,16 +194,22 @@ public class Sintactico extends java_cup.runtime.lr_parser {
 
 
 
+
+    
+    public ArrayList<Errores> a = new ArrayList<>();
+
     /*Method that is called when parser can be recovered*/
 	public void syntax_error(Symbol s){
-        System.out.println("Este es un error de sintaxis:"+s.value + ". Localizado en Fila"+ (s.right+1) +"y Columna "+(s.left+1));
+        System.out.println("Este es un error de sintaxis: "+s.value + ". Localizado en Fila " + (s.right+1) +" y Columna "+(s.left+1));
         Errores crear = new Errores("Error sintaxix", s.value.toString(), s.right+1, s.left+1);
+        a.add(crear);
     }
 
 	/*Method that is called when parser can't be recovered*/
 	public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
-        System.out.println("Este es un error de sintaxis:"+s.value + ". Localizado en Fila"+ (s.right+1) +"y Columna "+(s.left+1) + ". No se pudo recuperar.");
+        System.out.println("Este es un error de sintaxis: "+s.value + ". Localizado en Fila "+ (s.right+1) +" y Columna "+(s.left+1) + ". No se pudo recuperar.");
         Errores crear = new Errores("Error sintaxix", s.value.toString(), s.right+1, s.left+1);
+        a.add(crear);
 
     }
 

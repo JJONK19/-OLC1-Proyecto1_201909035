@@ -1,27 +1,37 @@
 package Analizador;
 import java_cup.runtime.Symbol;
 import Aplicacion.Errores;
+import java.util.ArrayList;
 
 parser code {:
+
+    
+    public 
+ArrayList<Errores> a = new ArrayList<>();
+
     /*Method that is called when parser can be recovered*/
 	public void syntax_error(Symbol s){
-        System.out.println("Este es un error de sintaxis:"+s.value + ". Localizado en Fila"+ (s.right+1) +"y Columna "+(s.left+1));
+        System.out.println("Este es un error de sintaxis: "+s.value + ". Localizado en Fila " + (s.right+1) +" y Columna "+(s.left+1));
         Errores crear = new Errores("Error sintaxix", s.value.toString(), s.right+1, s.left+1);
+        a.add(crear);
     }
 
 	/*Method that is called when parser can't be recovered*/
 	public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
-        System.out.println("Este es un error de sintaxis:"+s.value + ". Localizado en Fila"+ (s.right+1) +"y Columna "+(s.left+1) + ". No se pudo recuperar.");
+        System.out.println("Este es un error de sintaxis: "+s.value + ". Localizado en Fila "+ (s.right+1) +" y Columna "+(s.left+1) + ". No se pudo recuperar.");
         Errores crear = new Errores("Error sintaxix", s.value.toString(), s.right+1, s.left+1);
+        a.add(crear);
 
     }
 
 :}
 
-terminal porcentaje, conjunto, concatenacion, or, kleene, positiva, cerouno, guion, cierre, apertura, coma, dospuntos, puntocoma;
-terminal cadena, digito, letra, simbolo, flecha, id, especial;
+terminal String porcentaje, conjunto, concatenacion, or, kleene, positiva, cerouno, guion, cierre, apertura, coma, dospuntos, puntocoma;
+terminal String cadena, digito, letra, simbolo, flecha, id, especial;
 
-non terminal  SO, CONTENIDO, DECLARACION, VALIDAR, CONJUNTO, EXPRESION, NOT, GRUPO, VAL, SYM, E, OTROS, BINARIO, UNARIO;
+non terminal SO, CONTENIDO, DECLARACION, VALIDAR, CONJUNTO;
+non terminal String EXPRESION, BINARIO, UNARIO, OTROS, NOT, GRUPO, VAL, SYM, E;
+
 
 start with SO;
 

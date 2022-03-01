@@ -1,8 +1,12 @@
 package Analizador;
 import java_cup.runtime.Symbol;
 import Aplicacion.Errores;
+import java.util.ArrayList;
 
 %%
+%{
+    public ArrayList<Errores> a = new ArrayList<>();
+%}
 
 %public
 %class Lexico
@@ -17,17 +21,17 @@ import Aplicacion.Errores;
 digito =  [0-9]
 letra = [A-Za-z]
 simbolos = [!-$]|[&-)]|\/|-|[<->]|@|[\[-\`]
-mullinea = <!(\s|\n|\t|\r|[\"-;]|=|[?-»])*!>
+mullinea = \<\!([^"!>"]|[\r|\f|\s|\t|\n])*\!\>
 comlinea = \/\/.*
 strings = \"(\!|[\#-\»]|\s)*\"
 flecha = -(\s)*>
 id = {letra}({letra}|{letra}|{digito}|_)+
 especial  =  \\n|\\\"|\\\'
-espacio = [\r\f\s\t\n]
+espacio = [\r|\f|\s|\t|\n]
 
 %%
 
-"%"     { return new Symbol(sym.porcentaje, yyline, yycolumn, yytext());}
+"%"     { return new Symbol(sym.porcentaje, yyline, yycolumn, yytext()); }
 "CONJ"     { return new Symbol(sym.conjunto, yyline, yycolumn, yytext());}
 "."     { return new Symbol(sym.concatenacion, yyline, yycolumn, yytext());}
 "|"     { return new Symbol(sym.or, yyline, yycolumn, yytext());}
@@ -35,8 +39,8 @@ espacio = [\r\f\s\t\n]
 "+"     { return new Symbol(sym.positiva, yyline, yycolumn, yytext());}
 "?"     { return new Symbol(sym.cerouno, yyline, yycolumn, yytext());}
 "~"     { return new Symbol(sym.guion, yyline, yycolumn, yytext());}
-"{"     { return new Symbol(sym.cierre, yyline, yycolumn, yytext());}
-"}"     { return new Symbol(sym.apertura, yyline, yycolumn, yytext());}
+"{"     { return new Symbol(sym.apertura, yyline, yycolumn, yytext());}
+"}"     { return new Symbol(sym.cierre, yyline, yycolumn, yytext());}
 ","     { return new Symbol(sym.coma, yyline, yycolumn, yytext());}
 ":"     { return new Symbol(sym.dospuntos, yyline, yycolumn, yytext());}
 ";"     { return new Symbol(sym.puntocoma, yyline, yycolumn, yytext());}
@@ -54,5 +58,6 @@ espacio = [\r\f\s\t\n]
 . {
     System.out.println("Este es un error léxico: "+yytext() + "en línea"+yyline+" y columna "+yycolumn);
     Errores crear = new Errores("Léxico", yytext(), yyline, yycolumn);
+    a.add(crear);
 }
 
