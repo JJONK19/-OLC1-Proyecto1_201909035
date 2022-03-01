@@ -354,13 +354,23 @@ public class Main extends javax.swing.JFrame {
             consola("Análisis finalizado correctamente.");
         } catch (Exception e) {
             consola("Ocurrió un error.");
+            e.printStackTrace();
         }
+        //Impresion de errores lexicos
         for (int i = 0; i < lexico.a.size();i++ ){
             System.out.println(lexico.a.get(i).contenido);
         }
-        
+        //Impresion de errores de sintaxis
         for (int i = 0; i < sintactico.a.size();i++ ){
             System.out.println(sintactico.a.get(i).contenido);
+        }
+        //Impresion de Conjuntos
+        for(int i = 0; i < sintactico.con.size();i++){
+            System.out.println(sintactico.con.get(i).ID);
+            System.out.println(sintactico.con.get(i).conjunto);
+            System.out.println(sintactico.con.get(i).notacion);
+            System.out.println("-------------------------------");
+            
         }
     }//GEN-LAST:event_GenerarActionPerformed
 

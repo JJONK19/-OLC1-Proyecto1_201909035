@@ -1,13 +1,15 @@
 package Analizador;
 import java_cup.runtime.Symbol;
 import Aplicacion.Errores;
+import Aplicacion.Conjunto;
 import java.util.ArrayList;
-
+import java.util.Collections;
 parser code {:
 
     
-    public 
-ArrayList<Errores> a = new ArrayList<>();
+    public ArrayList<Errores> a = new ArrayList<>();
+    public ArrayList<Conjunto> con = new ArrayList<>();
+    public ArrayList<String> car = new ArrayList<>();
 
     /*Method that is called when parser can be recovered*/
 	public void syntax_error(Symbol s){
@@ -29,12 +31,14 @@ ArrayList<Errores> a = new ArrayList<>();
 terminal String porcentaje, conjunto, concatenacion, or, kleene, positiva, cerouno, guion, cierre, apertura, coma, dospuntos, puntocoma;
 terminal String cadena, digito, letra, simbolo, flecha, id, especial;
 
-non terminal SO, CONTENIDO, DECLARACION, VALIDAR, CONJUNTO;
-non terminal String EXPRESION, BINARIO, UNARIO, OTROS, NOT, GRUPO, VAL, SYM, E;
+non terminal SO, CONTENIDO, DECLARACION, VALIDAR, CONJUNTO, EXPRESION;
+non terminal ArrayList<Object> OTROS, E;
+non terminal String BINARIO, UNARIO, NOT, GRUPO, VAL, SYM;
 
 
 start with SO;
 
+/*--------------- Manejo de Declaraciones -----------------------*/
 SO ::= apertura CONTENIDO cierre
 ;
 
@@ -47,6 +51,106 @@ DECLARACION ::= CONJUNTO DECLARACION
                 |EXPRESION
 ;
 
+/*--------------- Manejo de Conjuntos -----------------------*/
+
+CONJUNTO ::= conjunto dospuntos id:a flecha NOT:b puntocoma
+            {:
+                ArrayList<String> ncar = new ArrayList<>();
+                for(int i = 0; i < car.size(); i++){
+                    ncar.add(car.get(i));
+                }
+                Conjunto nuevo = new Conjunto(a, ncar, b);
+                con.add(nuevo);
+                car.clear();
+            :}
+;
+
+NOT ::= letra:a guion letra:b
+        {:
+            int min = a.toCharArray()[0];
+            int max = b.toCharArray()[0];
+            if(min > max){
+                int ntem = min;
+                min = max;
+                max = ntem;
+            }
+            for(int i=min;i<=max;i++){
+                car.add(Character.toString(i));
+            }
+            String temp = "[" + a + "-" + b +"]";            
+            RESULT = temp;
+        :}
+
+        |digito:a guion digito:b
+        {:
+            int min = a.toCharArray()[0];
+            int max = b.toCharArray()[0];
+            if(min > max){
+                int ntem = min;
+                min = max;
+                max = ntem;
+            }
+            for(int i=min;i<=max;i++){
+                car.add(Character.toString(i));
+            }
+            String temp = "[" + a + "-" + b +"]";            
+            RESULT = temp;
+        :}
+
+        |SYM:a guion SYM:b
+        {:
+            int min = a.toCharArray()[0];
+            int max = b.toCharArray()[0];
+            if(min > max){
+                int ntem = min;
+                min = max;
+                max = ntem;
+            }
+            for(int i=min;i<=max;i++){
+                car.add(Character.toString(i));
+            }
+            String temp = "[" + a + "-" + b +"]";            
+            RESULT = temp;
+        :}
+
+        |GRUPO:a
+        {:
+            String temp = "(" + a + ")";   
+            Collections.reverse(car);
+            RESULT = temp;
+        :}
+;
+
+VAL ::= letra:a             {: RESULT = a; :}
+        |digito:a           {: RESULT = a; :}
+        |SYM:a              {: RESULT = a; :}
+;
+
+SYM ::= simbolo:a               {: RESULT = a; :}
+        |porcentaje:a           {: RESULT = a; :}
+        |concatenacion:a        {: RESULT = a; :}
+        |or:a                   {: RESULT = a; :}
+        |kleene:a               {: RESULT = a; :}
+        |positiva:a             {: RESULT = a; :}
+        |cerouno:a              {: RESULT = a; :}
+;
+
+GRUPO ::= VAL:a coma GRUPO:b
+          {:
+            String not = a + "|" + b;
+            car.add(a);
+            RESULT = not;
+          :}
+
+
+          |VAL:a
+          {:
+            car.add(a);
+            RESULT = a;
+          :}
+;
+
+/*--------------- Manejo de Expresiones -----------------------*/
 EXPRESION ::= id flecha E puntocoma
 ;
 
@@ -54,37 +158,6 @@ E ::= BINARIO E E
       |UNARIO E
       |apertura id cierre
       |OTROS
-;
-
-VALIDAR ::= id dospuntos cadena puntocoma VALIDAR
-            |id dospuntos cadena puntocoma
-;
-
-CONJUNTO ::= conjunto dospuntos id flecha NOT puntocoma
-;
-
-NOT ::= letra guion letra
-        |digito guion digito
-        |SYM guion SYM
-        |GRUPO
-;
-
-VAL ::= letra
-        |digito
-        |SYM
-;
-
-GRUPO ::= VAL coma GRUPO
-          |VAL
-;
-
-SYM ::= simbolo
-        |porcentaje
-        |concatenacion
-        |or
-        |kleene
-        |positiva
-        |cerouno
 ;
 
 OTROS ::= cadena
@@ -102,6 +175,7 @@ UNARIO  ::= kleene
             |cerouno
 ;
 
-
-
-
+/*--------------- Manejo de Validaciones -----------------------*/
+VALIDAR ::= id dospuntos cadena puntocoma VALIDAR
+            |id dospuntos cadena puntocoma
+;
