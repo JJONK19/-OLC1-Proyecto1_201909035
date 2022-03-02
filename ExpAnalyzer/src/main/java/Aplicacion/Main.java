@@ -14,6 +14,7 @@ import java.io.FileWriter;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.UUID;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -114,7 +115,7 @@ public class Main extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel2.setText("------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
-        Archivos.setBackground(java.awt.Color.darkGray);
+        Archivos.setBackground(new java.awt.Color(255, 255, 255));
         Archivos.setForeground(java.awt.Color.white);
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Reportes");
         javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Dir");
@@ -377,6 +378,15 @@ public class Main extends javax.swing.JFrame {
             System.out.println(sintactico.tom.get(i).ID);
             System.out.println("-------------------------------");    
         }
+        
+        //Graficar Thompson
+        for(int i = 0; i < sintactico.tom.size();i++){
+            Thompson temp = sintactico.tom.get(i);
+            temp.dibujar();
+            consola(temp.ID + " generado correctamente.");
+        }
+        
+       actualizar();
     }//GEN-LAST:event_GenerarActionPerformed
 
     /**

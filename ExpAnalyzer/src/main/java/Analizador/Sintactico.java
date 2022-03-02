@@ -689,14 +689,14 @@ class CUP$Sintactico$actions {
             NodoT t1 = new NodoT();
             NodoT t2 = new NodoT();
             t1.next1 = Cabecera1;
-            t1.tran1 = "ε";
+            t1.tran1 = "\"" + "*E*" + "\"";
             t1.next2 = Cabecera2;
-            t1.tran2 = "ε";
+            t1.tran2 = "\"" + "*E*" + "\"";
 
             Salida1.next1 = t2;
-            Salida1.tran1 = "ε";
+            Salida1.tran1 = "\"" + "*E*" + "\"";
             Salida2.next2 = t2;
-            Salida2.tran2 = "ε";
+            Salida2.tran2 = "\"" + "*E*" + "\"";
             
             //Preparar Info
             NodoT Cabecera = t1;
@@ -744,14 +744,15 @@ class CUP$Sintactico$actions {
             NodoT t1 = new NodoT();
             NodoT t2 = new NodoT();
             t1.next1 = Cabecera1;
-            t1.tran1 = "ε";
+            t1.tran1 = "\"" + "*E*" + "\"";
             t1.next2 = t2;
-            t1.tran2 = "ε";
+            t1.tran2 = "\"" + "*E*" + "\"";
+            t1.constraint = true;
 
             Salida1.next1 = t2;
-            Salida1.tran1 = "ε";
+            Salida1.tran1 = "\"" + "*E*" + "\"";
             Salida1.next2 = Cabecera1;
-            Salida1.tran2 = "ε";
+            Salida1.tran2 = "\"" + "*E*" + "\"";
             
             //Preparar Info
             NodoT Cabecera = t1;
@@ -848,14 +849,14 @@ class CUP$Sintactico$actions {
                 NodoT t1 = new NodoT();
                 NodoT t2 = new NodoT();
                 t1.next1 = Cabecera2;
-                t1.tran1 = "ε";
+                t1.tran1 = "\"" + "*E*" + "\"";
                 t1.next2 = t2;
-                t1.tran2 = "ε";
+                t1.tran2 = "\"" + "*E*" + "\"";
 
                 Salida2.next1 = t2;
-                Salida2.tran1 = "ε";
+                Salida2.tran1 = "\"" + "*E*" + "\"";
                 Salida2.next2 = Cabecera2;
-                Salida2.tran2 = "ε";
+                Salida2.tran2 = "\"" + "*E*" + "\"";
                 
                 NodoT CabeceraClon = t1;
                 NodoT SalidaClon = t2;
@@ -912,16 +913,16 @@ class CUP$Sintactico$actions {
                 NodoT te = new NodoT();
                 NodoT ts = new NodoT();
                 te.next1 = Cabecera1;
-                te.tran1 = "ε";
+                te.tran1 = "\"" + "*E*" + "\"";
                 te.next2 = t1;
-                te.tran2 = "ε";
+                te.tran2 = "\"" + "*E*" + "\"";
 
                 t1.next1 = t2;
-                t1.tran2 = "ε";
+                t1.tran2 = "\"" + "*E*" + "\"";
                 t2.next1 = ts;
-                t2.tran1 = "ε";
+                t2.tran1 = "\"" + "*E*" + "\"";
                 Salida1.next2 = ts;
-                Salida1.tran2 = "ε";
+                Salida1.tran2 = "\"" + "*E*" + "\"";
 
                 //Preparar Info
                 NodoT Cabecera = te;
@@ -970,7 +971,7 @@ class CUP$Sintactico$actions {
             NodoT t1 = new NodoT();
             NodoT t2 = new NodoT();
             t1.next1 = t2;
-            t1.tran1 = ct.notacion;
+            t1.tran1 = "\"" +ct.notacion + "\"";
             
             NodoT Cabecera = t1;
             NodoT Salida = t2;
@@ -989,7 +990,7 @@ class CUP$Sintactico$actions {
             NodoT t1 = new NodoT();
             NodoT t2 = new NodoT();
             t1.next1 = t2;
-            t1.tran1 = "Error";
+            t1.tran1 = "\""+ "Error" + "\"";
             
             NodoT Cabecera = t1;
             NodoT Salida = t2;
@@ -1033,7 +1034,7 @@ class CUP$Sintactico$actions {
             NodoT t1 = new NodoT();
             NodoT t2 = new NodoT();
             t1.next1 = t2;
-            t1.tran1 = a;
+            t1.tran1 =  a ;
             
             NodoT Cabecera = t1;
             NodoT Salida = t2;
@@ -1062,7 +1063,7 @@ class CUP$Sintactico$actions {
             NodoT t1 = new NodoT();
             NodoT t2 = new NodoT();
             t1.next1 = t2;
-            t1.tran1 = a;
+            t1.tran1 = "\""+ "\\" + a + "\"";
             
             NodoT Cabecera = t1;
             NodoT Salida = t2;
@@ -1091,7 +1092,7 @@ class CUP$Sintactico$actions {
             NodoT t1 = new NodoT();
             NodoT t2 = new NodoT();
             t1.next1 = t2;
-            t1.tran1 = a;
+            t1.tran1 = "\"" + a + "\"";
             
             NodoT Cabecera = t1;
             NodoT Salida = t2;
@@ -1120,7 +1121,7 @@ class CUP$Sintactico$actions {
             NodoT t1 = new NodoT();
             NodoT t2 = new NodoT();
             t1.next1 = t2;
-            t1.tran1 = a;
+            t1.tran1 = "\"" + a + "\"";
             
             NodoT Cabecera = t1;
             NodoT Salida = t2;

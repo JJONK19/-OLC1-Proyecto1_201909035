@@ -15,7 +15,7 @@ public class NodoT {
     public NodoT next2;
     public String tran1;
     public String tran2;
-    
+    public boolean constraint; //Determina si a la hora de graficar lleva constraint la transicion 2
     public NodoT(){
         this.ID = null;
         this.Nombre = null;
@@ -23,6 +23,7 @@ public class NodoT {
         this.next2 = null;
         this.tran1 = null;
         this.tran2 = null;
+        this.constraint = false;
     }
     
 }
