@@ -11,9 +11,9 @@ import java.util.ArrayList;
  * @author JJONK19
  */
 public class Conjunto {
-    String ID; //Identificador del Conjunto
-    ArrayList<String> conjunto; //Arreglo de caracteres que conforman el conjunto
-    String notacion; //Notación en formato regex del conjunto
+    public String ID; //Identificador del Conjunto
+    public ArrayList<String> conjunto; //Arreglo de caracteres que conforman el conjunto
+    public String notacion; //Notación en formato regex del conjunto
     
     public Conjunto(String _ID, ArrayList<String> _conjunto, String _notacion){
         this.ID = _ID; 

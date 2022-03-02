@@ -8,6 +8,8 @@ package Analizador;
 import java_cup.runtime.Symbol;
 import Aplicacion.Errores;
 import Aplicacion.Conjunto;
+import Aplicacion.NodoT;
+import Aplicacion.Thompson;
 import java.util.ArrayList;
 import java.util.Collections;
 import java_cup.runtime.XMLElement;
@@ -200,6 +202,7 @@ public class Sintactico extends java_cup.runtime.lr_parser {
     
     public ArrayList<Errores> a = new ArrayList<>();
     public ArrayList<Conjunto> con = new ArrayList<>();
+    public ArrayList<Thompson> tom = new ArrayList<>();
     public ArrayList<String> car = new ArrayList<>();
 
     /*Method that is called when parser can be recovered*/
@@ -592,7 +595,23 @@ class CUP$Sintactico$actions {
           case 24: // EXPRESION ::= id flecha E puntocoma 
             {
               Object RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)).right;
+		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
+		ArrayList<Object> b = (ArrayList<Object>)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
+		
+            //Procedimiento del metodo Thompson
+            NodoT Cabecera1 = (NodoT)b.get(0);
+            NodoT Salida1 = (NodoT)b.get(1);
+            ArrayList<NodoT> a1 = (ArrayList<NodoT>)b.get(2);
+            Thompson nuevo = new Thompson(a, a1, Cabecera1);
+            tom.add(nuevo);
+            
+            //Procedimiento del metodo del arbol
+            
+         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXPRESION",5, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -601,7 +620,104 @@ class CUP$Sintactico$actions {
           case 25: // E ::= BINARIO E E 
             {
               ArrayList<Object> RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).right;
+		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
+		ArrayList<Object> b = (ArrayList<Object>)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
+		int cleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		ArrayList<Object> c = (ArrayList<Object>)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		
+        if(a.equals(".")){                                           //Concatenación
+            ArrayList<Object> temp = new ArrayList<>();
+        //Procedimiento para el método Thompson
+            NodoT Cabecera1 = (NodoT)b.get(0);
+            NodoT Salida1 = (NodoT)b.get(1);
+            ArrayList<NodoT> a1 = (ArrayList<NodoT>)b.get(2);
 
+            NodoT Cabecera2 = (NodoT)c.get(0);
+            NodoT Salida2 = (NodoT)c.get(1);
+            ArrayList<NodoT> a2 = (ArrayList<NodoT>)c.get(2);
+            
+            //Procedimiento
+            //1.Convertir salida en nueva entrada
+            if(Cabecera2.next1 != null){
+                Salida1.next1 = Cabecera2.next1;
+                Salida1.tran1 = Cabecera2.tran1;
+            }
+            
+            if(Cabecera2.next2 != null){
+                Salida1.next2 = Cabecera2.next2;
+                Salida1.tran2 = Cabecera2.tran2;
+            }
+            
+            //2. Borrar nodo reemplazado
+            a2.remove(0);
+            Cabecera2 = null;
+            
+            //3. Preparar Info
+            NodoT Cabecera = Cabecera1;
+            NodoT Salida = Salida2;
+            ArrayList<NodoT>ListaNombre = new ArrayList<>();
+            for(int i = 0; i < a1.size(); i++){
+                ListaNombre.add(a1.get(i));
+            }
+            for(int i = 0; i < a2.size(); i++){
+                ListaNombre.add(a2.get(i));
+            }
+            temp.add(Cabecera);
+            temp.add(Salida);
+            temp.add(ListaNombre);
+
+            //Procedimiento para metodo del arbol
+            RESULT = temp;
+            
+        }else{                                                      //Or
+            ArrayList<Object> temp = new ArrayList<>();
+        //Procedimiento para el método Thompson
+            NodoT Cabecera1 = (NodoT)b.get(0);
+            NodoT Salida1 = (NodoT)b.get(1);
+            ArrayList<NodoT> a1 = (ArrayList<NodoT>)b.get(2);
+
+            NodoT Cabecera2 = (NodoT)c.get(0);
+            NodoT Salida2 = (NodoT)c.get(1);
+            ArrayList<NodoT> a2 = (ArrayList<NodoT>)c.get(2);
+            
+            //Procedimiento
+            NodoT t1 = new NodoT();
+            NodoT t2 = new NodoT();
+            t1.next1 = Cabecera1;
+            t1.tran1 = "ε";
+            t1.next2 = Cabecera2;
+            t1.tran2 = "ε";
+
+            Salida1.next1 = t2;
+            Salida1.tran1 = "ε";
+            Salida2.next2 = t2;
+            Salida2.tran2 = "ε";
+            
+            //Preparar Info
+            NodoT Cabecera = t1;
+            NodoT Salida = t2;
+            ArrayList<NodoT>ListaNombre = new ArrayList<>();
+            ListaNombre.add(Cabecera);
+            for(int i = 0; i < a1.size(); i++){
+                ListaNombre.add(a1.get(i));
+            }
+            for(int i = 0; i < a2.size(); i++){
+                ListaNombre.add(a2.get(i));
+            }
+            ListaNombre.add(Salida);
+            temp.add(Cabecera);
+            temp.add(Salida);
+            temp.add(ListaNombre);
+
+            //Procedimiento para metodo del arbol
+            RESULT = temp;
+        }
+      
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("E",7, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -610,7 +726,223 @@ class CUP$Sintactico$actions {
           case 26: // E ::= UNARIO E 
             {
               ArrayList<Object> RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
+		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		ArrayList<Object> b = (ArrayList<Object>)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		
+        if(a.equals("*")){                                           //Kleene
+            ArrayList<Object> temp = new ArrayList<>();
+        //Procedimiento para el método Thompson
+            NodoT Cabecera1 = (NodoT)b.get(0);
+            NodoT Salida1 = (NodoT)b.get(1);
+            ArrayList<NodoT> a1 = (ArrayList<NodoT>)b.get(2);
 
+            //Procedimiento
+            NodoT t1 = new NodoT();
+            NodoT t2 = new NodoT();
+            t1.next1 = Cabecera1;
+            t1.tran1 = "ε";
+            t1.next2 = t2;
+            t1.tran2 = "ε";
+
+            Salida1.next1 = t2;
+            Salida1.tran1 = "ε";
+            Salida1.next2 = Cabecera1;
+            Salida1.tran2 = "ε";
+            
+            //Preparar Info
+            NodoT Cabecera = t1;
+            NodoT Salida = t2;
+            ArrayList<NodoT>ListaNombre = new ArrayList<>();
+            ListaNombre.add(Cabecera);
+            for(int i = 0; i < a1.size(); i++){
+                ListaNombre.add(a1.get(i));
+            }
+            ListaNombre.add(Salida);
+            temp.add(Cabecera);
+            temp.add(Salida);
+            temp.add(ListaNombre);
+
+            //Procedimiento para metodo del arbol
+            RESULT = temp;
+            
+        }else{
+            if(a.equals("+")){                                           //Positiva
+                ArrayList<Object> temp = new ArrayList<>();
+            //Procedimiento para el método Thompson
+                NodoT Cabecera1 = (NodoT)b.get(0);
+                NodoT Salida1 = (NodoT)b.get(1);
+                ArrayList<NodoT> a1 = (ArrayList<NodoT>)b.get(2);
+
+                //Procedimiento
+                //1. Clonar entrada
+                ArrayList<String> ctran = new ArrayList<>();
+                ArrayList<NodoT> clon = new ArrayList<>();
+
+                for(int i = 0; i < a1.size(); i++){
+                    //Renombrar nodos
+                    NodoT rlis = a1.get(i);
+                    rlis.Nombre = Character.toString(41 + i);
+                }
+
+                for(int i = 0; i < a1.size(); i++){
+                    //Creacion de Nodos
+                    NodoT tclon = new NodoT();
+                    tclon.Nombre = Character.toString(41 + i); 
+                    clon.add(tclon);
+                    
+                    //Adicion de Trancisiones a la lista de strings
+                    NodoT rlis = a1.get(i);
+                    
+                    if(rlis.next1 != null){
+                        ctran.add(Character.toString(41 + i));
+                        ctran.add(rlis.next1.Nombre);
+                        ctran.add(rlis.tran1);
+                    }
+
+                    if(rlis.next2 != null){
+                        ctran.add(Character.toString(41 + i));
+                        ctran.add(rlis.next2.Nombre);
+                        ctran.add(rlis.tran2);
+                    }
+                }
+                
+                for(int i = 0; i < (ctran.size()/3); i++){
+                    String A = ctran.get(i*3);
+                    String B = ctran.get((i*3)+1);
+                    String C = ctran.get((i*3)+2);
+                    
+                    NodoT A1 = new NodoT();
+                    for(int j = 0; j < clon.size(); j++){
+                        A1 = clon.get(j);
+                        if(A1.Nombre.equals(A)){
+                            break;
+                        }
+                    }
+                    
+                    NodoT B1 = new NodoT();
+                    for(int j = 0; j < clon.size(); j++){
+                        B1 = clon.get(j);
+                        if(B1.Nombre.equals(B)){
+                            break;
+                        }
+                    }
+                    
+                    if(A1.next1 == null){
+                        A1.next1 = B1;
+                        A1.tran1 = C;
+                    }else{
+                        A1.next2 = B1;
+                        A1.tran2 = C;
+                    }
+                }
+                
+                NodoT Cabecera2 = clon.get(0);
+                NodoT Salida2 = clon.get(clon.size()-1);
+                ArrayList<NodoT> a2 = clon;
+                
+                //2.Kleene
+                NodoT t1 = new NodoT();
+                NodoT t2 = new NodoT();
+                t1.next1 = Cabecera2;
+                t1.tran1 = "ε";
+                t1.next2 = t2;
+                t1.tran2 = "ε";
+
+                Salida2.next1 = t2;
+                Salida2.tran1 = "ε";
+                Salida2.next2 = Cabecera2;
+                Salida2.tran2 = "ε";
+                
+                NodoT CabeceraClon = t1;
+                NodoT SalidaClon = t2;
+                ArrayList<NodoT>ListaNombreClon = new ArrayList<>();
+                ListaNombreClon.add(CabeceraClon);
+                for(int i = 0; i < clon.size(); i++){
+                    ListaNombreClon.add(clon.get(i));
+                }
+                ListaNombreClon.add(SalidaClon);
+                
+                //3. Concatenación
+                if(CabeceraClon.next1 != null){
+                    Salida1.next1 = CabeceraClon.next1;
+                    Salida1.tran1 = CabeceraClon.tran1;
+                }
+
+                if(CabeceraClon.next2 != null){
+                    Salida1.next2 = CabeceraClon.next2;
+                    Salida1.tran2 = CabeceraClon.tran2;
+                }
+
+                //Borrar nodo reemplazado
+                ListaNombreClon.remove(0);
+                CabeceraClon = null;
+
+
+                //3. Preparar Info
+                NodoT Cabecera = Cabecera1;
+                NodoT Salida = SalidaClon;
+                ArrayList<NodoT>ListaNombre = new ArrayList<>();
+                for(int i = 0; i < a1.size(); i++){
+                    ListaNombre.add(a1.get(i));
+                }
+                for(int i = 0; i < ListaNombreClon.size(); i++){
+                    ListaNombre.add(ListaNombreClon.get(i));
+                }
+                temp.add(Cabecera);
+                temp.add(Salida);
+                temp.add(ListaNombre);
+
+                //Procedimiento para metodo del arbol
+                RESULT = temp;
+            
+            }else{                                         //Uno o Cero
+                ArrayList<Object> temp = new ArrayList<>();
+            //Procedimiento para el método Thompson
+                NodoT Cabecera1 = (NodoT)b.get(0);
+                NodoT Salida1 = (NodoT)b.get(1);
+                ArrayList<NodoT> a1 = (ArrayList<NodoT>)b.get(2);
+
+                //Procedimiento
+                NodoT t1 = new NodoT();
+                NodoT t2 = new NodoT();
+                NodoT te = new NodoT();
+                NodoT ts = new NodoT();
+                te.next1 = Cabecera1;
+                te.tran1 = "ε";
+                te.next2 = t1;
+                te.tran2 = "ε";
+
+                t1.next1 = t2;
+                t1.tran2 = "ε";
+                t2.next1 = ts;
+                t2.tran1 = "ε";
+                Salida1.next2 = ts;
+                Salida1.tran2 = "ε";
+
+                //Preparar Info
+                NodoT Cabecera = te;
+                NodoT Salida = ts;
+                ArrayList<NodoT>ListaNombre = new ArrayList<>();
+                ListaNombre.add(Cabecera);
+                for(int i = 0; i < a1.size(); i++){
+                    ListaNombre.add(a1.get(i));
+                }
+                ListaNombre.add(t1);
+                ListaNombre.add(t2);
+                ListaNombre.add(Salida);
+                temp.add(Cabecera);
+                temp.add(Salida);
+                temp.add(ListaNombre);
+
+                //Procedimiento para metodo del arbol
+                RESULT = temp;
+            }
+        }
+      
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("E",7, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -619,7 +951,60 @@ class CUP$Sintactico$actions {
           case 27: // E ::= apertura id cierre 
             {
               ArrayList<Object> RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
+		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
+		
+        Conjunto ct = null;
+        int ban = 0;
+        for(int i = 0; i < con.size(); i++){
+            ct = con.get(i);
+            if(ct.ID.equals(a)){
+                ban = 1;
+                break;
+            }
+        }
+        
+        if(ban == 1){
+            //Procedimiento para el método Thompson
+            NodoT t1 = new NodoT();
+            NodoT t2 = new NodoT();
+            t1.next1 = t2;
+            t1.tran1 = ct.notacion;
+            
+            NodoT Cabecera = t1;
+            NodoT Salida = t2;
+            ArrayList<NodoT>ListaNombre = new ArrayList<>();
+            ListaNombre.add(t1);
+            ListaNombre.add(t2);
+            ArrayList<Object> temp = new ArrayList<>();
+            temp.add(Cabecera);
+            temp.add(Salida);
+            temp.add(ListaNombre);
+            
+            //Procedimiento para el metodo del arbol
+            RESULT = temp;
+        }else{
+            //Procedimiento para el método Thompson
+            NodoT t1 = new NodoT();
+            NodoT t2 = new NodoT();
+            t1.next1 = t2;
+            t1.tran1 = "Error";
+            
+            NodoT Cabecera = t1;
+            NodoT Salida = t2;
+            ArrayList<NodoT>ListaNombre = new ArrayList<>();
+            ListaNombre.add(t1);
+            ListaNombre.add(t2);
+            ArrayList<Object> temp = new ArrayList<>();
+            temp.add(Cabecera);
+            temp.add(Salida);
+            temp.add(ListaNombre);
+            
+            //Procedimiento para el metodo del arbol
+            RESULT = temp;
+        }
+      
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("E",7, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -628,7 +1013,10 @@ class CUP$Sintactico$actions {
           case 28: // E ::= OTROS 
             {
               ArrayList<Object> RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		ArrayList<Object> a = (ArrayList<Object>)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		 RESULT = a; 
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("E",7, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -637,7 +1025,27 @@ class CUP$Sintactico$actions {
           case 29: // OTROS ::= cadena 
             {
               ArrayList<Object> RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		
+            //Procedimiento para el método Thompson
+            NodoT t1 = new NodoT();
+            NodoT t2 = new NodoT();
+            t1.next1 = t2;
+            t1.tran1 = a;
+            
+            NodoT Cabecera = t1;
+            NodoT Salida = t2;
+            ArrayList<NodoT>ListaNombre = new ArrayList<>();
+            ListaNombre.add(t1);
+            ListaNombre.add(t2);
+            ArrayList<Object> temp = new ArrayList<>();
+            temp.add(Cabecera);
+            temp.add(Salida);
+            temp.add(ListaNombre);
+            RESULT = temp;
+          
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("OTROS",6, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -646,7 +1054,27 @@ class CUP$Sintactico$actions {
           case 30: // OTROS ::= especial 
             {
               ArrayList<Object> RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		
+            //Procedimiento para el método Thompson
+            NodoT t1 = new NodoT();
+            NodoT t2 = new NodoT();
+            t1.next1 = t2;
+            t1.tran1 = a;
+            
+            NodoT Cabecera = t1;
+            NodoT Salida = t2;
+            ArrayList<NodoT>ListaNombre = new ArrayList<>();
+            ListaNombre.add(t1);
+            ListaNombre.add(t2);
+            ArrayList<Object> temp = new ArrayList<>();
+            temp.add(Cabecera);
+            temp.add(Salida);
+            temp.add(ListaNombre);
+            RESULT = temp;
+          
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("OTROS",6, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -655,7 +1083,27 @@ class CUP$Sintactico$actions {
           case 31: // OTROS ::= letra 
             {
               ArrayList<Object> RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		
+            //Procedimiento para el método Thompson
+            NodoT t1 = new NodoT();
+            NodoT t2 = new NodoT();
+            t1.next1 = t2;
+            t1.tran1 = a;
+            
+            NodoT Cabecera = t1;
+            NodoT Salida = t2;
+            ArrayList<NodoT>ListaNombre = new ArrayList<>();
+            ListaNombre.add(t1);
+            ListaNombre.add(t2);
+            ArrayList<Object> temp = new ArrayList<>();
+            temp.add(Cabecera);
+            temp.add(Salida);
+            temp.add(ListaNombre);
+            RESULT = temp;
+          
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("OTROS",6, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -664,7 +1112,27 @@ class CUP$Sintactico$actions {
           case 32: // OTROS ::= digito 
             {
               ArrayList<Object> RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		
+            //Procedimiento para el método Thompson
+            NodoT t1 = new NodoT();
+            NodoT t2 = new NodoT();
+            t1.next1 = t2;
+            t1.tran1 = a;
+            
+            NodoT Cabecera = t1;
+            NodoT Salida = t2;
+            ArrayList<NodoT>ListaNombre = new ArrayList<>();
+            ListaNombre.add(t1);
+            ListaNombre.add(t2);
+            ArrayList<Object> temp = new ArrayList<>();
+            temp.add(Cabecera);
+            temp.add(Salida);
+            temp.add(ListaNombre);
+            RESULT = temp;
+          
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("OTROS",6, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -673,7 +1141,10 @@ class CUP$Sintactico$actions {
           case 33: // BINARIO ::= concatenacion 
             {
               String RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		 RESULT = a; 
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("BINARIO",8, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -682,7 +1153,10 @@ class CUP$Sintactico$actions {
           case 34: // BINARIO ::= or 
             {
               String RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		 RESULT = a; 
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("BINARIO",8, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -691,7 +1165,10 @@ class CUP$Sintactico$actions {
           case 35: // UNARIO ::= kleene 
             {
               String RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		 RESULT = a; 
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("UNARIO",9, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -700,7 +1177,10 @@ class CUP$Sintactico$actions {
           case 36: // UNARIO ::= positiva 
             {
               String RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		 RESULT = a; 
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("UNARIO",9, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -709,7 +1189,10 @@ class CUP$Sintactico$actions {
           case 37: // UNARIO ::= cerouno 
             {
               String RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
+		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
+		 RESULT = a; 
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("UNARIO",9, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;

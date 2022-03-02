@@ -369,8 +369,13 @@ public class Main extends javax.swing.JFrame {
             System.out.println(sintactico.con.get(i).ID);
             System.out.println(sintactico.con.get(i).conjunto);
             System.out.println(sintactico.con.get(i).notacion);
-            System.out.println("-------------------------------");
-            
+            System.out.println("-------------------------------");    
+        }
+        
+        //Impresion de Thompson
+        for(int i = 0; i < sintactico.tom.size();i++){
+            System.out.println(sintactico.tom.get(i).ID);
+            System.out.println("-------------------------------");    
         }
     }//GEN-LAST:event_GenerarActionPerformed
 
