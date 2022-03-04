@@ -3,16 +3,29 @@ import java_cup.runtime.Symbol;
 import Aplicacion.Errores;
 import Aplicacion.Conjunto;
 import Aplicacion.NodoT;
+import Aplicacion.NodoA;
+import Aplicacion.Siguiente;
 import Aplicacion.Thompson;
+import Aplicacion.Follows;
+import Aplicacion.Arbol;
+import Aplicacion.Estado;
+import Aplicacion.Transicion;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Arrays;
 parser code {:
 
     
-    public ArrayList<Errores> a = new ArrayList<>();
-    public ArrayList<Conjunto> con = new ArrayList<>();
-    public ArrayList<Thompson> tom = new ArrayList<>();
-    public ArrayList<String> car = new ArrayList<>();
+    public ArrayList<Errores> a = new ArrayList<>();        //Almacena los errores que vaya detectando el sistema
+    public ArrayList<Conjunto> con = new ArrayList<>();     //Almacena los conjuntos que se vayan generando
+    public ArrayList<Thompson> tom = new ArrayList<>();     //Almacena los thompson que lleva generando el sistema
+    public ArrayList<Arbol> arb = new ArrayList<>();     //Almacena los arboles que lleva generando el sistema
+    public ArrayList<Follows> fow = new ArrayList<>();     //Almacena los followa que lleva generando el sistema
+    public ArrayList<String> car = new ArrayList<>();       //Lista de caracteres que va a manejar el conjunto
+    public ArrayList<Estado> est = new ArrayList<>();
+    public ArrayList<Estado> tab = new ArrayList<>();
+    public int contador = 1;                                //Contabiliza cuantas hojas lleva el arbol
+    public int cestado = 0;
 
     /*Method that is called when parser can be recovered*/
 	public void syntax_error(Symbol s){
@@ -164,7 +177,134 @@ EXPRESION ::= id:a flecha E:b puntocoma
             tom.add(nuevo);
             
             //Procedimiento del metodo del arbol
+            NodoA hijo1 = (NodoA)b.get(3);
+            ArrayList<Siguiente> s1 = (ArrayList<Siguiente>)b.get(4);
+            ArrayList<NodoA> n1 = (ArrayList<NodoA>)b.get(5);
             
+                //Creacion del nodo aceptacion
+            NodoA a11 = new NodoA();
+            a11.simbolo = "$";
+            a11.valor = "$";
+            a11.anulable = false;
+            a11.nombre = Integer.toString(contador);
+            contador++;
+            a11.tipo = "Hijo";
+            a11.first.add(a11.nombre);
+            a11.last.add(a11.nombre);
+
+            Siguiente n = new Siguiente();
+            n.terminal.add("$");
+            n.hoja = a11.nombre;
+            n.simbolo = "$";
+            ArrayList<Siguiente> si = new ArrayList<>();
+            si.add(n);
+            
+            ArrayList<NodoA>listaNombre = new ArrayList<>();
+            listaNombre.add(a11);
+            
+            NodoA hijo2 = a11;
+            ArrayList<Siguiente> s2 = si;
+            ArrayList<NodoA> n2 = listaNombre;
+            
+                //Nodo Binario
+            NodoA bin = new NodoA();
+            bin.valor = ".";
+            bin.simbolo = ".";
+            if(hijo1.anulable == true && hijo2.anulable == true){
+                bin.anulable = true;
+            }else{
+                bin.anulable = false; 
+            }
+            bin.tipo = "Padre";
+            bin.hijo1 = hijo1;
+            bin.hijo2 = hijo2;
+            
+            //Calculo de los first
+            if(hijo1.anulable == true){
+                for(int i = 0; i < hijo1.first.size(); i++){
+                    bin.first.add(hijo1.first.get(i));
+                }
+                
+                for(int i = 0; i < hijo2.first.size(); i++){
+                    bin.first.add(hijo2.first.get(i));
+                }
+            }else{
+                for(int i = 0; i < hijo1.first.size(); i++){
+                    bin.first.add(hijo1.first.get(i));
+                }
+            }
+
+            //Calculo de last
+            if(hijo2.anulable == true){
+                for(int i = 0; i < hijo1.last.size(); i++){
+                    bin.last.add(hijo1.last.get(i));
+                }
+                
+                for(int i = 0; i < hijo2.last.size(); i++){
+                    bin.last.add(hijo2.last.get(i));
+                }
+            }else{
+                for(int i = 0; i < hijo2.last.size(); i++){
+                    bin.last.add(hijo2.last.get(i));
+                }
+            }
+            
+            //Mezcla de Siguientes
+            ArrayList<Siguiente> sis = new ArrayList<>();
+            for(int i = 0; i < s1.size(); i++){
+                sis.add(s1.get(i));
+            }
+            for(int i = 0; i < s2.size(); i++){
+                sis.add(s2.get(i));
+            }
+            
+            //Calculo de Siguientes
+            ArrayList<String> ast = hijo2.first;
+            for(int i = 0; i < hijo1.last.size(); i++){
+                String st = hijo1.last.get(i);
+                for(int j = 0; j < sis.size(); j++){
+                    Siguiente ste = sis.get(j);
+                    if(ste.hoja == st){
+                        if(ast.size() == 0){
+                            for(int k = 0; k < ast.size(); k++){
+                                ste.LS.add(ast.get(k));
+                            }
+                        }else{
+                            for(int k = 0; k < ast.size(); k++){
+                                if(Arrays.asList(ste.LS).contains(ast.get(k)) == false){
+                                ste.LS.add(ast.get(k));
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            ArrayList<NodoA>listanombre = new ArrayList<>();
+            listanombre.add(bin);
+            for(int i = 0; i < n1.size(); i++){
+                listanombre.add(n1.get(i));
+            }
+            for(int i = 0; i < n2.size(); i++){
+                listanombre.add(n2.get(i));
+            }
+            
+            NodoA cabecera = bin;
+            String nomo = hijo2.nombre;
+            contador = 1;
+
+            //Crear objeto arbol
+            Arbol nuevoa = new Arbol(a, listanombre, cabecera);
+            arb.add(nuevoa);
+            
+            //Crear objeto tabla siguientes
+            Follows nuevof = new Follows(a, sis);
+            fow.add(nuevof);
+            
+            //Manejo de la tabla de transiciones
+            Estado inicial = new Estado();
+            inicial.nombre = "S" + Integer.toString(cestado);
+            inicial.sig = cabecera.first;
          :}
 ;
 
@@ -212,6 +352,97 @@ E ::= BINARIO:a E:b E:c
             temp.add(ListaNombre);
 
             //Procedimiento para metodo del arbol
+            NodoA hijo1 = (NodoA)b.get(3);
+            NodoA hijo2 = (NodoA)c.get(3);
+            ArrayList<Siguiente> s1 = (ArrayList<Siguiente>)b.get(4);
+            ArrayList<Siguiente> s2 = (ArrayList<Siguiente>)c.get(4);
+            ArrayList<NodoA> n1 = (ArrayList<NodoA>)b.get(5);
+            ArrayList<NodoA> n2 = (ArrayList<NodoA>)c.get(5);
+                //Nodo Binario
+            NodoA bin = new NodoA();
+            bin.simbolo = ".";
+            bin.valor = ".";
+            if(hijo1.anulable == true && hijo2.anulable == true){
+                bin.anulable = true;
+            }else{
+                bin.anulable = false; 
+            }
+            bin.tipo = "Padre";
+            bin.hijo1 = hijo1;
+            bin.hijo2 = hijo2;
+            
+            //Calculo de los first
+            if(hijo1.anulable == true){
+                for(int i = 0; i < hijo1.first.size(); i++){
+                    bin.first.add(hijo1.first.get(i));
+                }
+                
+                for(int i = 0; i < hijo2.first.size(); i++){
+                    bin.first.add(hijo2.first.get(i));
+                }
+            }else{
+                for(int i = 0; i < hijo1.first.size(); i++){
+                    bin.first.add(hijo1.first.get(i));
+                }
+            }
+
+            //Calculo de last
+            if(hijo2.anulable == true){
+                for(int i = 0; i < hijo1.last.size(); i++){
+                    bin.last.add(hijo1.last.get(i));
+                }
+                
+                for(int i = 0; i < hijo2.last.size(); i++){
+                    bin.last.add(hijo2.last.get(i));
+                }
+            }else{
+                for(int i = 0; i < hijo2.last.size(); i++){
+                    bin.last.add(hijo2.last.get(i));
+                }
+            }
+            
+            //Mezcla de Siguientes
+            ArrayList<Siguiente> sis = new ArrayList<>();
+            for(int i = 0; i < s1.size(); i++){
+                sis.add(s1.get(i));
+            }
+            for(int i = 0; i < s2.size(); i++){
+                sis.add(s2.get(i));
+            }
+            
+            //Calculo de Siguientes
+            ArrayList<String> ast = hijo2.first;
+            for(int i = 0; i < hijo1.last.size(); i++){
+                String st = hijo1.last.get(i);
+                for(int j = 0; j < sis.size(); j++){
+                    Siguiente ste = sis.get(j);
+                    if(ste.hoja == st){
+                        if(ste.LS.size() == 0){
+                            for(int k = 0; k < ast.size(); k++){
+                                ste.LS.add(ast.get(k));
+                            }
+                        }else{
+                            for(int k = 0; k < ast.size(); k++){
+                                if(!ste.LS.contains(ast.get(k))){
+                                    ste.LS.add(ast.get(k));
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            temp.add(bin);   
+            temp.add(sis);
+            ArrayList<NodoA>listaNombre = new ArrayList<>();
+            listaNombre.add(bin);
+            for(int i = 0; i < n1.size(); i++){
+                listaNombre.add(n1.get(i));
+            }
+            for(int i = 0; i < n2.size(); i++){
+                listaNombre.add(n2.get(i));
+            }
+            temp.add(listaNombre);
             RESULT = temp;
             
         }else{                                                      //Or
@@ -255,6 +486,64 @@ E ::= BINARIO:a E:b E:c
             temp.add(ListaNombre);
 
             //Procedimiento para metodo del arbol
+            NodoA hijo1 = (NodoA)b.get(3);
+            NodoA hijo2 = (NodoA)c.get(3);
+            ArrayList<Siguiente> s1 = (ArrayList<Siguiente>)b.get(4);
+            ArrayList<Siguiente> s2 = (ArrayList<Siguiente>)c.get(4);
+            ArrayList<NodoA> n1 = (ArrayList<NodoA>)b.get(5);
+            ArrayList<NodoA> n2 = (ArrayList<NodoA>)c.get(5);
+
+                //Nodo Binario
+            NodoA bin = new NodoA();
+            bin.simbolo = "\\|";
+            bin.valor = "|";
+            if(hijo1.anulable == true || hijo2.anulable == true){
+                bin.anulable = true;
+            }else{
+                bin.anulable = false; 
+            }
+            bin.tipo = "Padre";
+            bin.hijo1 = hijo1;
+            bin.hijo2 = hijo2;
+            
+            //Calculo de los first
+            for(int i = 0; i < hijo1.first.size(); i++){
+                bin.first.add(hijo1.first.get(i));
+            }
+                
+            for(int i = 0; i < hijo2.first.size(); i++){
+                bin.first.add(hijo2.first.get(i));
+            }
+            
+
+            //Calculo de last
+            for(int i = 0; i < hijo1.last.size(); i++){
+                bin.last.add(hijo1.last.get(i));
+            }
+                
+            for(int i = 0; i < hijo2.last.size(); i++){
+                bin.last.add(hijo2.last.get(i));
+            }
+            
+            //Mezcla de Siguientes
+            ArrayList<Siguiente> sis = new ArrayList<>();
+            for(int i = 0; i < s1.size(); i++){
+                sis.add(s1.get(i));
+            }
+            for(int i = 0; i < s2.size(); i++){
+                sis.add(s2.get(i));
+            }
+            temp.add(bin);   
+            temp.add(sis);
+            ArrayList<NodoA>listaNombre = new ArrayList<>();
+            listaNombre.add(bin);
+            for(int i = 0; i < n1.size(); i++){
+                listaNombre.add(n1.get(i));
+            }
+            for(int i = 0; i < n2.size(); i++){
+                listaNombre.add(n2.get(i));
+            }
+            temp.add(listaNombre);
             RESULT = temp;
         }
       :}
@@ -296,6 +585,64 @@ E ::= BINARIO:a E:b E:c
             temp.add(ListaNombre);
 
             //Procedimiento para metodo del arbol
+            NodoA hijo1 = (NodoA)b.get(3);
+            ArrayList<Siguiente> s1 = (ArrayList<Siguiente>)b.get(4);
+            ArrayList<NodoA> n1 = (ArrayList<NodoA>)b.get(5);
+                //Nodo Unario
+            NodoA bin = new NodoA();
+            bin.valor = "*";
+            bin.simbolo = "*";
+            bin.anulable = true;
+            bin.tipo = "Padre";
+            bin.hijo1 = hijo1;
+            
+            //Calculo de los first
+            for(int i = 0; i < hijo1.first.size(); i++){
+                bin.first.add(hijo1.first.get(i));
+            }
+            
+
+            //Calculo de last
+            for(int i = 0; i < hijo1.last.size(); i++){
+                bin.last.add(hijo1.last.get(i));
+            }
+            
+            //Mezcla de Siguientes
+            ArrayList<Siguiente> sis = new ArrayList<>();
+            for(int i = 0; i < s1.size(); i++){
+                sis.add(s1.get(i));
+            }
+            
+            //Calculo de Siguientes
+            ArrayList<String> ast = hijo1.first;
+            for(int i = 0; i < hijo1.last.size(); i++){
+                String st = hijo1.last.get(i);
+                for(int j = 0; j < sis.size(); j++){
+                    Siguiente ste = sis.get(j);
+                    if(ste.hoja == st){
+                        if(ste.LS.size() == 0){
+                            for(int k = 0; k < ast.size(); k++){
+                                ste.LS.add(ast.get(k));
+                            }
+                        }else{
+                            for(int k = 0; k < ast.size(); k++){
+                                if(!ste.LS.contains(ast.get(k))){
+                                    ste.LS.add(ast.get(k));
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            temp.add(bin);   
+            temp.add(sis);
+            ArrayList<NodoA>listaNombre = new ArrayList<>();
+            listaNombre.add(bin);
+            for(int i = 0; i < n1.size(); i++){
+               listaNombre.add(n1.get(i));
+            }
+            temp.add(listaNombre);
             RESULT = temp;
             
         }else{
@@ -426,6 +773,64 @@ E ::= BINARIO:a E:b E:c
                 temp.add(ListaNombre);
 
                 //Procedimiento para metodo del arbol
+                NodoA hijo1 = (NodoA)b.get(3);
+                ArrayList<Siguiente> s1 = (ArrayList<Siguiente>)b.get(4);
+                ArrayList<NodoA> n1 = (ArrayList<NodoA>)b.get(5);
+                
+                    //Nodo Unario
+                NodoA bin = new NodoA();
+                bin.simbolo = "+";
+                bin.valor = "+";
+                bin.anulable = hijo1.anulable;
+                bin.tipo = "Padre";
+                bin.hijo1 = hijo1;
+                //Calculo de los first
+                for(int i = 0; i < hijo1.first.size(); i++){
+                    bin.first.add(hijo1.first.get(i));
+                }
+
+
+                //Calculo de last
+                for(int i = 0; i < hijo1.last.size(); i++){
+                    bin.last.add(hijo1.last.get(i));
+                }
+
+                //Mezcla de Siguientes
+                ArrayList<Siguiente> sis = new ArrayList<>();
+                for(int i = 0; i < s1.size(); i++){
+                    sis.add(s1.get(i));
+                }
+
+                //Calculo de Siguientes
+                ArrayList<String> ast = hijo1.first;
+                for(int i = 0; i < hijo1.last.size(); i++){
+                String st = hijo1.last.get(i);
+                for(int j = 0; j < sis.size(); j++){
+                    Siguiente ste = sis.get(j);
+                    if(ste.hoja == st){
+                        if(ste.LS.size() == 0){
+                            for(int k = 0; k < ast.size(); k++){
+                                ste.LS.add(ast.get(k));
+                            }
+                        }else{
+                            for(int k = 0; k < ast.size(); k++){
+                                if(!ste.LS.contains(ast.get(k))){
+                                    ste.LS.add(ast.get(k));
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+                temp.add(bin);   
+                temp.add(sis);
+                ArrayList<NodoA>listaNombre = new ArrayList<>();
+                listaNombre.add(bin);
+                for(int i = 0; i < n1.size(); i++){
+                    listaNombre.add(n1.get(i));
+                }
+                temp.add(listaNombre);
                 RESULT = temp;
             
             }else{                                         //Uno o Cero
@@ -468,6 +873,40 @@ E ::= BINARIO:a E:b E:c
                 temp.add(ListaNombre);
 
                 //Procedimiento para metodo del arbol
+                NodoA hijo1 = (NodoA)b.get(3);
+                ArrayList<Siguiente> s1 = (ArrayList<Siguiente>)b.get(4);
+                ArrayList<NodoA> n1 = (ArrayList<NodoA>)b.get(5);
+                    //Nodo Unario
+                NodoA bin = new NodoA();
+                bin.valor = "?";
+                bin.simbolo = "?";
+                bin.anulable = true;
+                bin.tipo = "Padre";
+                bin.hijo1 = hijo1;
+                //Calculo de los first
+                for(int i = 0; i < hijo1.first.size(); i++){
+                    bin.first.add(hijo1.first.get(i));
+                }
+
+
+                //Calculo de last
+                for(int i = 0; i < hijo1.last.size(); i++){
+                    bin.last.add(hijo1.last.get(i));
+                }
+
+                //Mezcla de Siguientes
+                ArrayList<Siguiente> sis = new ArrayList<>();
+                for(int i = 0; i < s1.size(); i++){
+                    sis.add(s1.get(i));
+                }
+                temp.add(bin);   
+                temp.add(sis);
+                ArrayList<NodoA>listaNombre = new ArrayList<>();
+                listaNombre.add(bin);
+                for(int i = 0; i < n1.size(); i++){
+                    listaNombre.add(n1.get(i));
+                }
+                temp.add(listaNombre);
                 RESULT = temp;
             }
         }
@@ -490,7 +929,7 @@ E ::= BINARIO:a E:b E:c
             NodoT t1 = new NodoT();
             NodoT t2 = new NodoT();
             t1.next1 = t2;
-            t1.tran1 = "\"" +ct.notacion + "\"";
+            t1.tran1 = "\"" +ct.ID + "\"";
             
             NodoT Cabecera = t1;
             NodoT Salida = t2;
@@ -503,6 +942,33 @@ E ::= BINARIO:a E:b E:c
             temp.add(ListaNombre);
             
             //Procedimiento para el metodo del arbol
+            NodoA a1 = new NodoA();
+            a1.simbolo = ct.ID;
+            a1.simbolo = a1.simbolo.replace("{", "");
+            a1.simbolo = a1.simbolo.replace("}", "");
+
+            a1.valor = ct.notacion;
+            a1.anulable = false;
+            a1.nombre = Integer.toString(contador);
+            contador++;
+            a1.tipo = "Hijo";
+            a1.first.add(a1.nombre);
+            a1.last.add(a1.nombre);
+
+            Siguiente n = new Siguiente();
+            n.terminal = ct.conjunto;;
+            n.hoja = a1.nombre;
+            n.simbolo = ct.ID;
+            n.simbolo = n.simbolo.replace("{", "");
+            n.simbolo = n.simbolo.replace("}", "");
+
+            ArrayList<Siguiente> sis = new ArrayList<>();
+            sis.add(n);
+            temp.add(a1);   
+            temp.add(sis);
+            ArrayList<NodoA>listaNombre = new ArrayList<>();
+            listaNombre.add(a1);
+            temp.add(listaNombre);
             RESULT = temp;
         }else{
             //Procedimiento para el método Thompson
@@ -522,6 +988,27 @@ E ::= BINARIO:a E:b E:c
             temp.add(ListaNombre);
             
             //Procedimiento para el metodo del arbol
+            NodoA a1 = new NodoA();
+            a1.simbolo = "\""+ "Error" + "\"";
+            a1.valor = "Error";
+            a1.anulable = false;
+            a1.nombre = Integer.toString(contador);
+            contador++;
+            a1.tipo = "Hijo";
+            a1.first.add(a1.nombre);
+            a1.last.add(a1.nombre);
+
+            Siguiente n = new Siguiente();
+            n.terminal.add(a);
+            n.hoja = a1.nombre;
+
+            ArrayList<Siguiente> sis = new ArrayList<>();
+            sis.add(n);
+            temp.add(a1);   
+            temp.add(sis);
+            ArrayList<NodoA>listaNombre = new ArrayList<>();
+            listaNombre.add(a1);
+            temp.add(listaNombre);
             RESULT = temp;
         }
       :}
@@ -545,6 +1032,34 @@ OTROS ::= cadena:a
             temp.add(Cabecera);
             temp.add(Salida);
             temp.add(ListaNombre);
+            
+            //Procedimiento para el metodo del arbol
+            NodoA a1 = new NodoA();
+            a1.valor = a;
+            a1.valor = a1.valor.replace("\"", "");
+            a1.simbolo = a;
+            a1.simbolo = a1.simbolo.replace("\"", "");
+            a1.simbolo = "\\" + "\"" + a1.simbolo + "\\" + "\"";
+            a1.anulable = false;
+            a1.nombre = Integer.toString(contador);
+            contador++;
+            a1.tipo = "Hijo";
+            a1.first.add(a1.nombre);
+            a1.last.add(a1.nombre);
+            
+
+            Siguiente n = new Siguiente();
+            n.terminal.add(a1.valor);
+            n.hoja = a1.nombre;
+            n.simbolo = a1.simbolo;
+
+            ArrayList<Siguiente> sis = new ArrayList<>();
+            sis.add(n);
+            temp.add(a1);   
+            temp.add(sis);
+            ArrayList<NodoA>listaNombre = new ArrayList<>();
+            listaNombre.add(a1);
+            temp.add(listaNombre);
             RESULT = temp;
           :}
 
@@ -565,6 +1080,30 @@ OTROS ::= cadena:a
             temp.add(Cabecera);
             temp.add(Salida);
             temp.add(ListaNombre);
+
+            //Procedimiento para el metodo del arbol
+            NodoA a1 = new NodoA();
+            a1.simbolo = "\\" + a;
+            a1.valor = a;
+            a1.anulable = false;
+            a1.nombre = Integer.toString(contador);
+            contador++;
+            a1.tipo = "Hijo";
+            a1.first.add(a1.nombre);
+            a1.last.add(a1.nombre);
+
+            Siguiente n = new Siguiente();
+            n.terminal.add(a1.simbolo);
+            n.hoja = a1.nombre;
+            n.simbolo = a1.simbolo;
+
+            ArrayList<Siguiente> sis = new ArrayList<>();
+            sis.add(n);
+            temp.add(a1);   
+            temp.add(sis);
+            ArrayList<NodoA>listaNombre = new ArrayList<>();
+            listaNombre.add(a1);
+            temp.add(listaNombre);
             RESULT = temp;
           :}
 
@@ -585,6 +1124,31 @@ OTROS ::= cadena:a
             temp.add(Cabecera);
             temp.add(Salida);
             temp.add(ListaNombre);
+
+            //Procedimiento para el metodo del arbol
+            NodoA a1 = new NodoA();
+            a1.simbolo = a;
+            a1.valor = a;
+            a1.anulable = false;
+            a1.nombre = Integer.toString(contador);
+            contador++;
+            a1.tipo = "Hijo";
+            a1.first.add(a1.nombre);
+            a1.last.add(a1.nombre);
+
+            Siguiente n = new Siguiente();
+            n.terminal.add(a);
+            n.hoja = a1.nombre;
+            n.simbolo = a1.simbolo;
+
+            ArrayList<Siguiente> sis = new ArrayList<>();
+            sis.add(n);
+            
+            temp.add(a1);   
+            temp.add(sis);
+            ArrayList<NodoA>listaNombre = new ArrayList<>();
+            listaNombre.add(a1);
+            temp.add(listaNombre);
             RESULT = temp;
           :}
           
@@ -605,6 +1169,33 @@ OTROS ::= cadena:a
             temp.add(Cabecera);
             temp.add(Salida);
             temp.add(ListaNombre);
+            
+            //Procedimiento para el metodo del arbol
+            NodoA a1 = new NodoA();
+            a1.simbolo = a;
+            a1.valor = a;
+            a1.anulable = false;
+            a1.nombre = Integer.toString(contador);
+            contador++;
+            a1.tipo = "Hijo";
+            a1.first.add(a1.nombre);
+            a1.last.add(a1.nombre);
+
+            Siguiente n = new Siguiente();
+            n.terminal.add(a);
+            n.hoja = a1.nombre;
+            n.simbolo = a1.simbolo;
+
+            ArrayList<Siguiente> sis = new ArrayList<>();
+            sis.add(n);
+            
+            ArrayList<NodoA>listaNombre = new ArrayList<>();
+            listaNombre.add(a1);
+           
+
+            temp.add(a1);   
+            temp.add(sis);
+            temp.add(listaNombre);
             RESULT = temp;
           :}
 ;

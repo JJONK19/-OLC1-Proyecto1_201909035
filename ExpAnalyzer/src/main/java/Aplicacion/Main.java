@@ -140,7 +140,7 @@ public class Main extends javax.swing.JFrame {
 
         jComboBox1.setBackground(java.awt.Color.darkGray);
         jComboBox1.setForeground(java.awt.Color.white);
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Arboles", "Siguientes", "Transiciones", "Automatas Deterministas", "Automatas No Deterministas", " ", " " }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Arboles", "Siguientes", "Transiciones", "Automatas Deterministas", "Automatas No Deterministas" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -288,11 +288,13 @@ public class Main extends javax.swing.JFrame {
                
             }
         }
+        actualizar();
         
     }//GEN-LAST:event_AbrirActionPerformed
     
     //Guardar Informacion en el archivo cargado
     private void GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GuardarActionPerformed
+        actualizar();
         if(ban == 1){
             try {
                 FileWriter stream = new FileWriter (f, false);
@@ -325,6 +327,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_GuardarActionPerformed
 
     private void GuardarComoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GuardarComoActionPerformed
+        actualizar();
         JFileChooser file = new JFileChooser();
         FileNameExtensionFilter exp = new FileNameExtensionFilter("Archivos exp (*.exp)", "exp");
         file.addChoosableFileFilter(exp);
@@ -347,6 +350,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_GuardarComoActionPerformed
 
     private void GenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenerarActionPerformed
+        actualizar();
         Lexico lexico = new Lexico(new BufferedReader( new StringReader(Texto.getText())));
         Sintactico sintactico =new Sintactico(lexico);
         consola("Leyendo...");
@@ -365,19 +369,6 @@ public class Main extends javax.swing.JFrame {
         for (int i = 0; i < sintactico.a.size();i++ ){
             System.out.println(sintactico.a.get(i).contenido);
         }
-        //Impresion de Conjuntos
-        for(int i = 0; i < sintactico.con.size();i++){
-            System.out.println(sintactico.con.get(i).ID);
-            System.out.println(sintactico.con.get(i).conjunto);
-            System.out.println(sintactico.con.get(i).notacion);
-            System.out.println("-------------------------------");    
-        }
-        
-        //Impresion de Thompson
-        for(int i = 0; i < sintactico.tom.size();i++){
-            System.out.println(sintactico.tom.get(i).ID);
-            System.out.println("-------------------------------");    
-        }
         
         //Graficar Thompson
         for(int i = 0; i < sintactico.tom.size();i++){
@@ -386,7 +377,21 @@ public class Main extends javax.swing.JFrame {
             consola(temp.ID + " generado correctamente.");
         }
         
-       actualizar();
+        
+        
+        
+        //Graficar Arboles
+        for(int i = 0; i < sintactico.arb.size();i++){
+            Arbol temp =  sintactico.arb.get(i);
+            temp.dibujar();
+        }
+       
+        //Graficar Follows
+        for(int i = 0; i < sintactico.fow.size();i++){
+            Follows temp = sintactico.fow.get(i);
+            temp.dibujar();
+        }
+        actualizar(); 
     }//GEN-LAST:event_GenerarActionPerformed
 
     /**

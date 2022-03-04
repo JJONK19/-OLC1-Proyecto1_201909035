@@ -357,14 +357,12 @@
               <Color blue="ff" green="ff" id="white" palette="1" red="ff" type="palette"/>
             </Property>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="7">
+              <StringArray count="5">
                 <StringItem index="0" value="Arboles"/>
                 <StringItem index="1" value="Siguientes"/>
                 <StringItem index="2" value="Transiciones"/>
                 <StringItem index="3" value="Automatas Deterministas"/>
                 <StringItem index="4" value="Automatas No Deterministas"/>
-                <StringItem index="5" value=" "/>
-                <StringItem index="6" value=" "/>
               </StringArray>
             </Property>
           </Properties>

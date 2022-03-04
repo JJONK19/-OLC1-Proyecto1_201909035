@@ -1,0 +1,26 @@
+digraph G
+{
+rankdir=LR"42168170-e6ff-478f-bc6d-2a43fbfc015d"[ label="S0" shape=circle];
+"76aad6fd-31ad-425f-9df5-192287854caa"[ label="S1" shape=circle];
+"1d2fb441-2a90-49e3-ba9c-a4b93b8eec60"[ label="S2" shape=circle];
+"a10a18ef-4d01-4abe-b242-dbbeefb60f39"[ label="S3" shape=circle];
+"00187c57-3e36-4309-b545-60da3fc9ec17"[ label="S4" shape=circle];
+"bdbf67a5-784e-46f0-8ae3-f3ee15777a71"[ label="S5" shape=circle];
+"ce4503fd-6c71-40fd-8349-229619a38da1"[ label="S6" shape=circle];
+"4eac4570-e560-43f1-a3ce-b5a41c949a38"[ label="S7" shape=circle];
+"ab476e7f-9002-4eb5-82d3-99698b665d08"[ label="S8" shape=circle];
+"8410f0c9-e66d-46d7-ba8c-961fbaa698ce"[ label="S9" shape=doublecircle];
+"42168170-e6ff-478f-bc6d-2a43fbfc015d"->"76aad6fd-31ad-425f-9df5-192287854caa"[minlen=2 label =  "[0-3]"];
+"76aad6fd-31ad-425f-9df5-192287854caa"->"1d2fb441-2a90-49e3-ba9c-a4b93b8eec60"[minlen=2 label =  <&epsilon;>];
+"76aad6fd-31ad-425f-9df5-192287854caa"->"00187c57-3e36-4309-b545-60da3fc9ec17"[minlen=2 label =  <&epsilon;>];
+"1d2fb441-2a90-49e3-ba9c-a4b93b8eec60"->"a10a18ef-4d01-4abe-b242-dbbeefb60f39"[minlen=2 label =  "[0-3]"];
+"a10a18ef-4d01-4abe-b242-dbbeefb60f39"->"00187c57-3e36-4309-b545-60da3fc9ec17"[minlen=2 label =  <&epsilon;>];
+"a10a18ef-4d01-4abe-b242-dbbeefb60f39"->"1d2fb441-2a90-49e3-ba9c-a4b93b8eec60"[minlen=2 label =  <&epsilon;>];
+"00187c57-3e36-4309-b545-60da3fc9ec17"->"bdbf67a5-784e-46f0-8ae3-f3ee15777a71"[minlen=2 label =  "."];
+"bdbf67a5-784e-46f0-8ae3-f3ee15777a71"->"ce4503fd-6c71-40fd-8349-229619a38da1"[minlen=2 label =  "[0-3]"];
+"ce4503fd-6c71-40fd-8349-229619a38da1"->"4eac4570-e560-43f1-a3ce-b5a41c949a38"[minlen=2 label =  <&epsilon;>];
+"ce4503fd-6c71-40fd-8349-229619a38da1"->"8410f0c9-e66d-46d7-ba8c-961fbaa698ce"[minlen=2 label =  <&epsilon;>];
+"4eac4570-e560-43f1-a3ce-b5a41c949a38"->"ab476e7f-9002-4eb5-82d3-99698b665d08"[minlen=2 label =  "[0-3]"];
+"ab476e7f-9002-4eb5-82d3-99698b665d08"->"8410f0c9-e66d-46d7-ba8c-961fbaa698ce"[minlen=2 label =  <&epsilon;>];
+"ab476e7f-9002-4eb5-82d3-99698b665d08"->"4eac4570-e560-43f1-a3ce-b5a41c949a38"[minlen=2 label =  <&epsilon;>];
+}
