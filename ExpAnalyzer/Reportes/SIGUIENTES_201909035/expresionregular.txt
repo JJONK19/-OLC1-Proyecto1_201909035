@@ -1,0 +1,4 @@
+digraph G
+{
+node [ shape=record]
+a[label = "{Hoja|Terminal|Siguiente}|{1|\"a\"|2 3 4 }|{2|impar|2 3 4 }|{3|letrac|2 3 4 }|{4|\"b\"|5 }"]}

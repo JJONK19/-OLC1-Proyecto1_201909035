@@ -1,0 +1,23 @@
+[
+	{
+		"Valor": "a56"
+		"ExpresionRegular": expre1
+		"Resultado": Rechazada
+	},
+	{
+		"Valor": "f"
+		"ExpresionRegular": expre1
+		"Resultado": Aceptada
+	},
+	{
+		"Valor": "mabbbbbbfdsbz"
+		"ExpresionRegular": expre1
+		"Resultado": Rechazada
+	},
+	{
+		"Valor": "mabbbbbbfdsb"
+		"ExpresionRegular": expre1
+		"Resultado": Aceptada
+	}
+
+]

@@ -1,0 +1,23 @@
+[
+	{
+		"Valor": "1200.31"
+		"ExpresionRegular": decimales
+		"Resultado": Aceptada
+	},
+	{
+		"Valor": "301.59"
+		"ExpresionRegular": decimales
+		"Resultado": Rechazada
+	},
+	{
+		"Valor": "HoLA"
+		"ExpresionRegular": identificador
+		"Resultado": Rechazada
+	},
+	{
+		"Valor": "hola_soy_id_1"
+		"ExpresionRegular": identificador
+		"Resultado": Aceptada
+	}
+
+]

@@ -16,6 +16,9 @@ import Aplicacion.Follows;
 import Aplicacion.Arbol;
 import Aplicacion.Estado;
 import Aplicacion.Transicion;
+import Aplicacion.Estados;
+import Aplicacion.Validar;
+import Aplicacion.Automata;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Arrays;
@@ -215,6 +218,9 @@ public class Sintactico extends java_cup.runtime.lr_parser {
     public ArrayList<String> car = new ArrayList<>();       //Lista de caracteres que va a manejar el conjunto
     public ArrayList<Estado> est = new ArrayList<>();
     public ArrayList<Estado> tab = new ArrayList<>();
+    public ArrayList<Estados> trans = new ArrayList<>();    //Tabla de transiciones
+    public ArrayList<Automata> auto = new ArrayList<>();    //Lista de automatas
+    public ArrayList<Validar> val = new ArrayList<>();    //Lista de validaciones
     public int contador = 1;                                //Contabiliza cuantas hojas lleva el arbol
     public int cestado = 0;
 
@@ -638,18 +644,11 @@ class CUP$Sintactico$actions {
             a11.first.add(a11.nombre);
             a11.last.add(a11.nombre);
 
-            Siguiente n = new Siguiente();
-            n.terminal.add("$");
-            n.hoja = a11.nombre;
-            n.simbolo = "$";
-            ArrayList<Siguiente> si = new ArrayList<>();
-            si.add(n);
-            
             ArrayList<NodoA>listaNombre = new ArrayList<>();
             listaNombre.add(a11);
             
             NodoA hijo2 = a11;
-            ArrayList<Siguiente> s2 = si;
+            ArrayList<Siguiente> s2 = new ArrayList<>();
             ArrayList<NodoA> n2 = listaNombre;
             
                 //Nodo Binario
@@ -750,7 +749,128 @@ class CUP$Sintactico$actions {
             //Manejo de la tabla de transiciones
             Estado inicial = new Estado();
             inicial.nombre = "S" + Integer.toString(cestado);
+            cestado++;
             inicial.sig = cabecera.first;
+            
+            est.add(inicial);
+            while(!est.isEmpty()){
+                Estado etemp = est.get(0);
+                ArrayList<Transicion> ttemp = new ArrayList<>();
+                ArrayList<String> stemp = etemp.sig;
+                //1.Recorrer stemp
+                for(int i = 0; i < stemp.size(); i++){
+                    String st = stemp.get(i);
+                    for(int j = 0; j < sis.size(); j++){
+                        Siguiente ste = sis.get(j);
+                        if(ste.hoja == st){
+                            Transicion tt = new Transicion();
+                            tt.car = ste.terminal;
+                            tt.sig = ste.LS;
+                            ttemp.add(tt);
+                        }
+                    }
+                    if(st == nomo){
+                        etemp.aceptar = true;
+                    }
+                }
+                
+                //2.Optimización
+                for(int i = 0 ; i < ttemp.size(); i++){
+                    Transicion tte = ttemp.get(i);
+                    for(int j = 0 ; j < ttemp.size(); j++){
+                        if(i != j){
+                            Transicion ttej = ttemp.get(j);
+                            if(!ttej.rev){
+                                if(tte.car.equals(ttej.car)){
+                                    for(int k = 0; k < ttej.car.size(); k++){
+                                        tte.car.add(ttej.car.get(k));
+                                    }
+                                    ttej.borrar = true;
+                                }
+                                tte.rev = true;
+                            }
+                        }
+                       
+                    }
+                    
+                }
+                
+                for(int i = 0 ; i < ttemp.size(); i++){
+                    Transicion tte = ttemp.get(i);
+                    if(tte.borrar){
+                        tte = null;
+                        ttemp.remove(i);
+                    }
+                }
+                   
+                //Nombres
+                for(int i = 0 ; i < ttemp.size(); i++){
+                    int ban = 0;
+                    int bant = 0;
+                    Transicion tte = ttemp.get(i);
+                    //Buscar en la cola de estados
+                    for(int j = 0; j < est.size(); j++){
+                        ArrayList<String> lse = est.get(j).sig;
+                        if(lse.equals(tte.sig)){
+                            tte.next = est.get(j);
+                            ban = 1;
+                            break;
+                        }
+                    }
+                    
+                    //Buscar en los estados finalizados
+                    if(ban == 0){
+                        if(tab.isEmpty()){
+                            //Crear nuevo estado
+                            Estado net = new Estado();
+                            net.nombre = "S" + Integer.toString(cestado);
+                            cestado++;
+                            net.sig = tte.sig;
+                            tte.next = net;
+                            est.add(net);
+                            
+                        }else{
+                            for(int j = 0; j < tab.size(); j++){
+                                ArrayList<String> lse = tab.get(j).sig;
+                                if(lse.equals(tte.sig)){
+                                    tte.next = tab.get(j);
+                                    bant = 1;
+                                    break;
+                                }
+                            }
+                            
+                            if(bant == 0){
+                                //Crear nuevo estado
+                                Estado net = new Estado();
+                                net.nombre = "S" + Integer.toString(cestado);
+                                cestado++;
+                                net.sig = tte.sig;
+                                tte.next = net;
+                                est.add(net);
+                            }
+                        }
+                    }
+                    
+                }
+                
+                //Paso Final
+                etemp.tr = ttemp;
+                tab.add(etemp);
+                est.remove(0);
+            }
+            
+            cestado = 0;
+            Estados ntrans = new Estados(a,tab);
+            trans.add(ntrans);
+
+             //Manejo de Automatas
+            Automata nauto = new Automata(a,tab, inicial);
+            auto.add(nauto);
+
+            est = new ArrayList<>();
+            tab = new ArrayList<>();
+
+           
          
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXPRESION",5, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1793,7 +1913,34 @@ class CUP$Sintactico$actions {
           case 38: // VALIDAR ::= id dospuntos cadena puntocoma VALIDAR 
             {
               Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)).right;
+		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).right;
+		String b = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).value;
+		
+                Automata temp = null;
+                int ban = 0;
+                for(int i = 0; i < auto.size(); i++){
+                    temp = auto.get(i);
+                    if(temp.ID.equals(a)){
+                        ban = 1;
+                        break;
+                    }
+                }
+                
+                if(ban == 0){
+                    temp = null;
+                }
+                else{
+                   //Crear el objeto validar
+                    Validar vnuevo = new Validar(b, temp);
+                    val.add(vnuevo);
+                }
+                
 
+            
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("VALIDAR",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -1802,7 +1949,34 @@ class CUP$Sintactico$actions {
           case 39: // VALIDAR ::= id dospuntos cadena puntocoma 
             {
               Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)).right;
+		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
+		String b = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
+		
+                Automata temp = null;
+                int ban = 0;
+                for(int i = 0; i < auto.size(); i++){
+                    temp = auto.get(i);
+                    if(temp.ID.equals(a)){
+                        ban = 1;
+                        break;
+                    }
+                }
+                
+                if(ban == 0){
+                    temp = null;
+                }
+                else{
+                   //Crear el objeto validar
+                    Validar vnuevo = new Validar(b, temp);
+                    val.add(vnuevo);
+                }
+                
 
+            
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("VALIDAR",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;

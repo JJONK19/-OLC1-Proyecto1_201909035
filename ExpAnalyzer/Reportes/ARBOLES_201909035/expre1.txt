@@ -1,0 +1,23 @@
+digraph G
+{
+node [ shape=record ];
+"80c6e971-e7ed-47c7-bc4f-413e437cbfc8"[ label="(1)| {F|.|-} |(5)"];
+"327c93f9-3859-4738-bd00-0bdc94205bbc"[ label="(1)| {F|.|-} |(1,2,3,4)"];
+"29938668-3b23-457f-b61f-727f28327dc7"[ label="(1)| {F|letra|1} |(1)"];
+"d06cff4f-56c0-4956-83fa-35985baba840"[ label="(2,3,4)| {V|*|-} |(2,3,4)"];
+"6fc4bdd1-790e-41af-abd1-36b2a0afcf01"[ label="(2,3,4)| {F|\||-} |(2,3,4)"];
+"d03f81e2-6dd3-4da6-8a47-fc62ffed1d28"[ label="(2)| {F|numero|2} |(2)"];
+"de85d55b-8b78-4404-b732-fe2d2def86ef"[ label="(3,4)| {F|\||-} |(3,4)"];
+"a390e976-8026-485c-959e-ee66fee211cc"[ label="(3)| {F|letra|3} |(3)"];
+"181b80e8-ba28-4fc3-9b42-7bf624386429"[ label="(4)| {F|numero2|4} |(4)"];
+"29f2c98f-0760-4228-8809-08891b626e76"[ label="(5)| {F|$|5} |(5)"];
+"80c6e971-e7ed-47c7-bc4f-413e437cbfc8"->"327c93f9-3859-4738-bd00-0bdc94205bbc"[minlen=2 ];
+"80c6e971-e7ed-47c7-bc4f-413e437cbfc8"->"29f2c98f-0760-4228-8809-08891b626e76"[minlen=2 ];
+"327c93f9-3859-4738-bd00-0bdc94205bbc"->"29938668-3b23-457f-b61f-727f28327dc7"[minlen=2 ];
+"327c93f9-3859-4738-bd00-0bdc94205bbc"->"d06cff4f-56c0-4956-83fa-35985baba840"[minlen=2 ];
+"d06cff4f-56c0-4956-83fa-35985baba840"->"6fc4bdd1-790e-41af-abd1-36b2a0afcf01"[minlen=2 ];
+"6fc4bdd1-790e-41af-abd1-36b2a0afcf01"->"d03f81e2-6dd3-4da6-8a47-fc62ffed1d28"[minlen=2 ];
+"6fc4bdd1-790e-41af-abd1-36b2a0afcf01"->"de85d55b-8b78-4404-b732-fe2d2def86ef"[minlen=2 ];
+"de85d55b-8b78-4404-b732-fe2d2def86ef"->"a390e976-8026-485c-959e-ee66fee211cc"[minlen=2 ];
+"de85d55b-8b78-4404-b732-fe2d2def86ef"->"181b80e8-ba28-4fc3-9b42-7bf624386429"[minlen=2 ];
+}

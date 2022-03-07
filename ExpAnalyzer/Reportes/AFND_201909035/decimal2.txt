@@ -1,0 +1,18 @@
+digraph G
+{
+rankdir=LR"3662205d-ba4d-4946-a012-79463c7e585d"[ label="S0" shape=circle];
+"f6606f4c-1342-4b1e-8940-238d157ce3e7"[ label="S1" shape=circle];
+"93b3d770-2604-40a1-aff0-d5e1d2da8cc2"[ label="S2" shape=circle];
+"e15ce4ec-83ce-4b18-88f6-186b9fe73fe5"[ label="S3" shape=circle];
+"40d95327-5be1-48e9-80f7-e3bb143f1caf"[ label="S4" shape=circle];
+"5aa3a459-17d4-48e1-8c10-f8091d12fd35"[ label="S5" shape=circle];
+"8f185ff6-d85e-4111-9687-423c84872c8e"[ label="S6" shape=doublecircle];
+"3662205d-ba4d-4946-a012-79463c7e585d"->"f6606f4c-1342-4b1e-8940-238d157ce3e7"[minlen=2 label =  "digito"];
+"f6606f4c-1342-4b1e-8940-238d157ce3e7"->"93b3d770-2604-40a1-aff0-d5e1d2da8cc2"[minlen=2 label =  "."];
+"93b3d770-2604-40a1-aff0-d5e1d2da8cc2"->"e15ce4ec-83ce-4b18-88f6-186b9fe73fe5"[minlen=2 label =  "digito"];
+"e15ce4ec-83ce-4b18-88f6-186b9fe73fe5"->"40d95327-5be1-48e9-80f7-e3bb143f1caf"[minlen=2 label =  <&epsilon;>];
+"e15ce4ec-83ce-4b18-88f6-186b9fe73fe5"->"8f185ff6-d85e-4111-9687-423c84872c8e"[minlen=2 label =  <&epsilon;>];
+"40d95327-5be1-48e9-80f7-e3bb143f1caf"->"5aa3a459-17d4-48e1-8c10-f8091d12fd35"[minlen=2 label =  "digito"];
+"5aa3a459-17d4-48e1-8c10-f8091d12fd35"->"8f185ff6-d85e-4111-9687-423c84872c8e"[minlen=2 label =  <&epsilon;>];
+"5aa3a459-17d4-48e1-8c10-f8091d12fd35"->"40d95327-5be1-48e9-80f7-e3bb143f1caf"[minlen=2 label =  <&epsilon;>];
+}

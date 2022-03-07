@@ -1,0 +1,4 @@
+digraph G
+{
+rankdir=LR  node [ shape=record]
+a[label = "{Estado | Transición}| {S0 (1 )|S1 - ( 0 1 2 3 )}| {S1 (1 2 )|S1 - ( 0 1 2 3 )}| {S1 (1 2 )|S2 - ( . )}| {S2 (3 )|S3 - ( 0 1 2 3 )}| {S3 (3 4 )|S3 - ( 0 1 2 3 )}"]}

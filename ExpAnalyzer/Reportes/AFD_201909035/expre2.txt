@@ -1,0 +1,11 @@
+digraph G
+{
+rankdir=LR"7089dc54-e186-4cb8-a6d3-44034d1246ea"[ label="S0" shape=circle];
+"ef232489-c1cf-4be0-8fb1-efd55fe4f1c7"[ label="S1" shape=circle];
+"e35a2f19-c79d-4522-90e6-952da98c8228"[ label="S2" shape=circle];
+"841dd25d-65ac-4f16-9512-4af6553031c6"[ label="S3" shape=doublecircle];
+"7089dc54-e186-4cb8-a6d3-44034d1246ea"->"ef232489-c1cf-4be0-8fb1-efd55fe4f1c7"[minlen=2 label = "( a )"];
+"ef232489-c1cf-4be0-8fb1-efd55fe4f1c7"->"e35a2f19-c79d-4522-90e6-952da98c8228"[minlen=2 label = "( a )"];
+"e35a2f19-c79d-4522-90e6-952da98c8228"->"841dd25d-65ac-4f16-9512-4af6553031c6"[minlen=2 label = "( 7 8 )"];
+"841dd25d-65ac-4f16-9512-4af6553031c6"->"841dd25d-65ac-4f16-9512-4af6553031c6"[minlen=2 label = "( 7 8 )"];
+}

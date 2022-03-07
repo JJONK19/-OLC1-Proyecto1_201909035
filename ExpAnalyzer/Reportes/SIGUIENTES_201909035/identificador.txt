@@ -1,4 +1,4 @@
 digraph G
 {
 node [ shape=record]
-a[label = "{Hoja|Terminal|Siguiente}|{1|[a-z]|2 3 4 5 }|{2|\"_\"|2 3 4 5 }|{3|[a-z]|2 3 4 5 }|{4|[0-3]|2 3 4 5 }|{5|$|-}"]}
+a[label = "{Hoja|Terminal|Siguiente}|{1|letra|2 3 4 5 }|{2|\"_\"|2 3 4 5 }|{3|letra|2 3 4 5 }|{4|digito|2 3 4 5 }"]}

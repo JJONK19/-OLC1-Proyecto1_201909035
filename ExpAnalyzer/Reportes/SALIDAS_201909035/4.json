@@ -1,0 +1,18 @@
+[
+	{
+		"Valor": "aazbbb"
+		"ExpresionRegular": expre2
+		"Resultado": Rechazada
+	},
+	{
+		"Valor": "aa"
+		"ExpresionRegular": expre2
+		"Resultado": Rechazada
+	},
+	{
+		"Valor": "aa788787"
+		"ExpresionRegular": expre2
+		"Resultado": Aceptada
+	}
+
+]

@@ -1,0 +1,26 @@
+digraph G
+{
+rankdir=LR"b221752d-065f-4fbf-a682-8b2fc57a9ea3"[ label="S0" shape=circle];
+"59e95194-c703-47de-ac75-d1c0eae6180a"[ label="S1" shape=circle];
+"e7db85a8-ad5e-4cb1-b61a-d84d0b363782"[ label="S2" shape=circle];
+"50c1ca20-dfce-4646-a642-07ad13ce7583"[ label="S3" shape=circle];
+"68a185b4-8442-4d1a-8977-11f246402734"[ label="S4" shape=circle];
+"854036d0-c0ab-49f8-90a8-44d266f9fab0"[ label="S5" shape=circle];
+"e66f5c7f-b1d8-4108-afd4-2ecf2471cae3"[ label="S6" shape=circle];
+"98bdb60d-83ab-4fc6-8617-a2659f7637d3"[ label="S7" shape=circle];
+"01f098a4-6556-4c07-b0ef-5c593f157531"[ label="S8" shape=circle];
+"8f20afdf-d637-4851-ac45-518fe336a645"[ label="S9" shape=doublecircle];
+"b221752d-065f-4fbf-a682-8b2fc57a9ea3"->"59e95194-c703-47de-ac75-d1c0eae6180a"[minlen=2 label =  "digito"];
+"59e95194-c703-47de-ac75-d1c0eae6180a"->"e7db85a8-ad5e-4cb1-b61a-d84d0b363782"[minlen=2 label =  <&epsilon;>];
+"59e95194-c703-47de-ac75-d1c0eae6180a"->"68a185b4-8442-4d1a-8977-11f246402734"[minlen=2 label =  <&epsilon;>];
+"e7db85a8-ad5e-4cb1-b61a-d84d0b363782"->"50c1ca20-dfce-4646-a642-07ad13ce7583"[minlen=2 label =  "digito"];
+"50c1ca20-dfce-4646-a642-07ad13ce7583"->"68a185b4-8442-4d1a-8977-11f246402734"[minlen=2 label =  <&epsilon;>];
+"50c1ca20-dfce-4646-a642-07ad13ce7583"->"e7db85a8-ad5e-4cb1-b61a-d84d0b363782"[minlen=2 label =  <&epsilon;>];
+"68a185b4-8442-4d1a-8977-11f246402734"->"854036d0-c0ab-49f8-90a8-44d266f9fab0"[minlen=2 label =  "."];
+"854036d0-c0ab-49f8-90a8-44d266f9fab0"->"e66f5c7f-b1d8-4108-afd4-2ecf2471cae3"[minlen=2 label =  "digito"];
+"e66f5c7f-b1d8-4108-afd4-2ecf2471cae3"->"98bdb60d-83ab-4fc6-8617-a2659f7637d3"[minlen=2 label =  <&epsilon;>];
+"e66f5c7f-b1d8-4108-afd4-2ecf2471cae3"->"8f20afdf-d637-4851-ac45-518fe336a645"[minlen=2 label =  <&epsilon;>];
+"98bdb60d-83ab-4fc6-8617-a2659f7637d3"->"01f098a4-6556-4c07-b0ef-5c593f157531"[minlen=2 label =  "digito"];
+"01f098a4-6556-4c07-b0ef-5c593f157531"->"8f20afdf-d637-4851-ac45-518fe336a645"[minlen=2 label =  <&epsilon;>];
+"01f098a4-6556-4c07-b0ef-5c593f157531"->"98bdb60d-83ab-4fc6-8617-a2659f7637d3"[minlen=2 label =  <&epsilon;>];
+}

@@ -1,0 +1,9 @@
+digraph G
+{
+rankdir=LR"1b1ed0f9-0aa0-4655-a98b-f4f27793d247"[ label="S0" shape=circle];
+"c30b58f3-6331-4897-a08e-2bdcbd14cef4"[ label="S1" shape=doublecircle];
+"1b1ed0f9-0aa0-4655-a98b-f4f27793d247"->"c30b58f3-6331-4897-a08e-2bdcbd14cef4"[minlen=2 label = "( a b c d e f g h i j k l m n o p q r s t u v w x y z )"];
+"c30b58f3-6331-4897-a08e-2bdcbd14cef4"->"c30b58f3-6331-4897-a08e-2bdcbd14cef4"[minlen=2 label = "( _ )"];
+"c30b58f3-6331-4897-a08e-2bdcbd14cef4"->"c30b58f3-6331-4897-a08e-2bdcbd14cef4"[minlen=2 label = "( a b c d e f g h i j k l m n o p q r s t u v w x y z )"];
+"c30b58f3-6331-4897-a08e-2bdcbd14cef4"->"c30b58f3-6331-4897-a08e-2bdcbd14cef4"[minlen=2 label = "( 0 1 2 3 )"];
+}

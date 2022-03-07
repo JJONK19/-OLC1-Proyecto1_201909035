@@ -6,16 +6,31 @@ package Aplicacion;
 
 import Analizador.Lexico;
 import Analizador.Sintactico;
+import java.awt.Desktop;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -29,8 +44,12 @@ public class Main extends javax.swing.JFrame {
     /**
      * Creates new form Main
      */
+    public static ArrayList<Errores> lexico = new ArrayList<>();    //Lista de validaciones
+    public static ArrayList<Errores> sintaxis = new ArrayList<>();    //Lista de validaciones
+    
     public Main() {
         initComponents();
+        actualizar();
     }
 
     /**
@@ -54,10 +73,11 @@ public class Main extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         Archivos = new javax.swing.JTree();
-        jLabel4 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox<>();
+        Panel = new javax.swing.JScrollPane();
+        imagen = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         Menu = new javax.swing.JMenu();
         Abrir = new javax.swing.JMenuItem();
@@ -98,6 +118,11 @@ public class Main extends javax.swing.JFrame {
         jButton2.setFont(new java.awt.Font("Franklin Gothic Medium", 2, 14)); // NOI18N
         jButton2.setForeground(java.awt.Color.white);
         jButton2.setText("Analizar Entradas");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         Consola.setEditable(false);
         Consola.setBackground(java.awt.Color.darkGray);
@@ -113,7 +138,7 @@ public class Main extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Mongolian Baiti", 0, 18)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel2.setText("------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+        jLabel2.setText("-----------------------------------------------------------------------------------------");
 
         Archivos.setBackground(new java.awt.Color(255, 255, 255));
         Archivos.setForeground(java.awt.Color.white);
@@ -122,11 +147,6 @@ public class Main extends javax.swing.JFrame {
         treeNode1.add(treeNode2);
         Archivos.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         jScrollPane3.setViewportView(Archivos);
-
-        jLabel4.setBackground(java.awt.Color.darkGray);
-        jLabel4.setForeground(java.awt.Color.white);
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("No Image");
 
         jButton3.setBackground(java.awt.Color.gray);
         jButton3.setFont(new java.awt.Font("Franklin Gothic Medium", 2, 14)); // NOI18N
@@ -137,6 +157,11 @@ public class Main extends javax.swing.JFrame {
         jButton4.setFont(new java.awt.Font("Franklin Gothic Medium", 2, 14)); // NOI18N
         jButton4.setForeground(java.awt.Color.white);
         jButton4.setText("Siguiente");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jComboBox1.setBackground(java.awt.Color.darkGray);
         jComboBox1.setForeground(java.awt.Color.white);
@@ -147,13 +172,17 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        imagen.setBackground(java.awt.Color.darkGray);
+        Panel.setViewportView(imagen);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 539, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -163,27 +192,28 @@ public class Main extends javax.swing.JFrame {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2)))
-                .addContainerGap(21, Short.MAX_VALUE))
+                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(Panel, javax.swing.GroupLayout.PREFERRED_SIZE, 573, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 8, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
@@ -193,22 +223,21 @@ public class Main extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(Generar)
                                     .addComponent(jButton2)))
-                            .addComponent(jScrollPane3)))
+                            .addComponent(jScrollPane3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Panel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton3)
-                            .addComponent(jButton4))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton4)
+                            .addComponent(jButton3))))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
@@ -262,7 +291,113 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
+        String name = (String) jComboBox1.getSelectedItem();
+        switch(name){
+            case "Arboles":
+                actual = arbol;
+                pos = 0;
+                tamaño = actual.size();
+                if(!actual.isEmpty()){
+                    try {
+                        File temp = actual.get(0);
+                        BufferedImage img = ImageIO.read(temp.getAbsoluteFile());
+                        imagen.setSize(img.getWidth(), img.getHeight());
+                        imagen.setIcon(new ImageIcon(img)); 
+                      
+                    } catch (IOException ex) {
+                        System.out.println("Error");
+                    }
+                }else{
+                    imagen.setIcon(null);
+                    
+                }
+                break;
+                
+            case "Transiciones":
+                actual = transicion;
+                pos = 0;
+                tamaño = actual.size();
+                if(!actual.isEmpty()){
+                    try {
+                        File temp = actual.get(0);
+                        BufferedImage img = ImageIO.read(temp.getAbsoluteFile());
+                        imagen.setSize(img.getWidth(), img.getHeight());
+                        imagen.setIcon(new ImageIcon(img)); 
+                      
+                    } catch (IOException ex) {
+                        System.out.println("Error");
+                    }
+                }else{
+                    imagen.setIcon(null);
+                    
+                }
+                break;
+
+            
+            case "Siguientes":
+                actual = siguiente;
+                pos = 0;
+                tamaño = actual.size();
+                if(!actual.isEmpty()){
+                    try {
+                        File temp = actual.get(0);
+                        BufferedImage img = ImageIO.read(temp.getAbsoluteFile());
+                        imagen.setSize(img.getWidth(), img.getHeight());
+                        imagen.setIcon(new ImageIcon(img)); 
+                      
+                    } catch (IOException ex) {
+                        System.out.println("Error");
+                    }
+                }else{
+                    imagen.setIcon(null);
+                    
+                }
+                break;
+
+                
+            case "Automatas Deterministas":
+                actual = afd;
+                pos = 0;
+                tamaño = actual.size();
+                if(!actual.isEmpty()){
+                    try {
+                        File temp = actual.get(0);
+                        BufferedImage img = ImageIO.read(temp.getAbsoluteFile());
+                        imagen.setSize(img.getWidth(), img.getHeight());
+                        imagen.setIcon(new ImageIcon(img)); 
+                      
+                    } catch (IOException ex) {
+                        System.out.println("Error");
+                    }
+                }else{
+                    imagen.setIcon(null);
+                    
+                }
+                break;
+
+                
+            case "Automatas No Deterministas":
+                actual = afnd;
+                pos = 0;
+                tamaño = actual.size();
+                if(!actual.isEmpty()){
+                    try {
+                        File temp = actual.get(0);
+                        BufferedImage img = ImageIO.read(temp.getAbsoluteFile());
+                        imagen.setSize(img.getWidth(), img.getHeight());
+                        imagen.setIcon(new ImageIcon(img)); 
+                      
+                    } catch (IOException ex) {
+                        System.out.println("Error");
+                    }
+                }else{
+                    imagen.setIcon(null);
+                    
+                }
+                break;
+
+        }
+        
     }//GEN-LAST:event_jComboBox1ActionPerformed
     
     //Abre un archivo y lo muestra en la caja de texto
@@ -357,6 +492,170 @@ public class Main extends javax.swing.JFrame {
         try {
             sintactico.parse();
             consola("Análisis finalizado correctamente.");
+            
+            //Graficar Thompson
+            consola("--------------------------------------------------------------------------------------------");
+            for(int i = 0; i < sintactico.tom.size();i++){
+                Thompson temp = sintactico.tom.get(i);
+                temp.dibujar();
+                consola(temp.ID + " generado correctamente.");
+            }
+
+            //Graficar Arboles
+            for(int i = 0; i < sintactico.arb.size();i++){
+                Arbol temp =  sintactico.arb.get(i);
+                temp.dibujar();
+            }
+
+            //Graficar Follows
+            for(int i = 0; i < sintactico.fow.size();i++){
+                Follows temp = sintactico.fow.get(i);
+                temp.dibujar();
+            }
+
+            //Manejo de tabla de transiciones
+            for(int i = 0; i < sintactico.trans.size();i++){
+                Estados temp = sintactico.trans.get(i);
+                temp.dibujar();
+            }
+
+            //Manejo de Automatas
+            for(int i = 0; i < sintactico.auto.size();i++){
+                Automata temp = sintactico.auto.get(i);
+                temp.dibujar();
+            }
+
+            //Manejo de Validaciones
+            val = sintactico.val;
+            
+            //Generar Errores
+            FileWriter file = null;
+            PrintWriter p = null;
+            String nombre= "";
+            if(ban == 1){
+                nombre = f.getName();
+                nombre = nombre.substring(0, nombre.length()-4);
+            }else{
+                nombre = "Default";
+            }
+            try {
+                String path = "Reportes/ERRORES_201909035/"+nombre+".html";
+                    file = new FileWriter(path);
+                    p = new PrintWriter(file);
+                    p.println("<!DOCTYPE html>");
+                    p.println("<html>");
+                    p.println("    <head>");
+                    p.println("        <title>Reporte de Errores</title>");
+                    p.println("        <style>");
+                    p.println("            *{");
+                    p.println("                background-color: #eff7e1;");
+                    p.println("                font-family: \"Arial Narrow\";");
+                    p.println("              }");
+                    p.println("            h1{");
+                    p.println("                color: #222831;");
+                    p.println("                font-family: \"Arial Narrow\";");
+                    p.println("              }");
+                    p.println("            h2{");
+                    p.println("                color: #30475e;");
+                    p.println("                font-family: \"Arial Narrow\";");
+                    p.println("              }");
+                    p.println("            h3{");
+                    p.println("                color: #f05454;");
+                    p.println("                font-family: \"Arial Narrow\";");
+                    p.println("              }");
+                    p.println("            aside{");
+                    p.println("                background-color: #214151;");
+                    p.println("                color: #663F3F;");
+                    p.println("                font-family: \"Arial Narrow\";");
+                    p.println("              }");
+                    p.println("            header{");
+                    p.println("                background-color: #a2d0c1;");
+                    p.println("                color: #663F3F;");
+                    p.println("                font-family: \"Arial Narrow\";");
+                    p.println("              }");
+                    p.println("            footer{");
+                    p.println("                background-color: #f8dc81;");
+                    p.println("                color: #663F3F;");
+                    p.println("                font-family: \"Arial Narrow\";");
+                    p.println("              }");
+                    p.println("            table{");
+                    p.println("                width: 100%");
+                    p.println("                border-collapse: collapse;");
+                    p.println("                font-family: \"Arial Narrow\";");
+                    p.println("            td, th{");
+                    p.println("                border: 1px solid #dddddd");
+                    p.println("                text-align: center;");
+                    p.println("                padding: 8px;");
+                    p.println("            tr:nth-child(even);{");
+                    p.println("                background-color: #dddddd");
+                    p.println("              }");
+                    p.println("        </style>");
+                    p.println("    </head>");
+                    p.println("    <body>");
+                    p.println("        <header>");
+                    p.println("            <br></br>");
+                    p.println("            <br></br>");
+                    p.println("        </header>");
+                    p.println("        <aside>");
+                    p.println("            <br></br>");
+                    p.println("            <br></br>");
+                    p.println("        </aside>");
+                    p.println("        <center>");
+                    p.println("            <h1><b><u>TABLA DE ERRORES</u></b></h1>");
+                    p.println("            <br></br>");
+                    p.println("            <table>");
+                    p.println("                <tr>");
+                    p.println("                    <th><span style=\"color: #009DFF\">TIPO</span></th>");
+                    p.println("                    <th><span style=\"color: #009DFF\">DESCRIPCIÓN</span></th>");
+                    p.println("                    <th><span style=\"color: #009DFF\">FILA</span></th>");
+                    p.println("                    <th><span style=\"color: #009DFF\">COLUMNA</span></th>");
+                    p.println("                </tr>");
+                    p.println("                <tr>");
+                    p.println("                </tr>");
+                    for(int i = 0;i<sintactico.a.size();i++){
+                        Errores temp = sintactico.a.get(i);
+                        p.println("                <tr>");
+                        p.println("                    <th>"+temp.clase+"</th>");
+                        p.println("                    <th>"+temp.contenido+"</th>");
+                        p.println("                    <th>"+temp.fila+"</th>");
+                        p.println("                    <th>"+temp.columna+"</th>");
+                        p.println("                </tr>");
+                    }
+                    for(int i = 0;i<lexico.a.size();i++){
+                        Errores temp = lexico.a.get(i);
+                        p.println("                <tr>");
+                        p.println("                    <th>"+temp.clase+"</th>");
+                        p.println("                    <th>"+temp.contenido+"</th>");
+                        p.println("                    <th>"+temp.fila+"</th>");
+                        p.println("                    <th>"+temp.columna+"</th>");
+                        p.println("                </tr>");
+                    }
+                    p.println("            </table>");
+                    p.println("            <br></br>");
+                    p.println("            <br></br>");
+                    p.println("            <br></br>");
+                    p.println("            <br></br>");
+                    p.println("        </center>");
+                    p.println("        <aside>");
+                    p.println("            <br></br>");
+                    p.println("            <br></br>");
+                    p.println("        </aside>");
+                    p.println("        <footer>");
+                    p.println("            <br></br>");
+                    p.println("            <br></br>");
+                    p.println("        </footer>");
+                    p.println("    </body>");
+                    p.println("</html>");
+                } catch (Exception e) {
+                    System.out.println("No se pudo imprimir el archivo");
+                }finally{
+                    if(null!=file){
+                        file.close();
+                    }
+                }
+                
+         
+            
         } catch (Exception e) {
             consola("Ocurrió un error.");
             e.printStackTrace();
@@ -370,29 +669,87 @@ public class Main extends javax.swing.JFrame {
             System.out.println(sintactico.a.get(i).contenido);
         }
         
-        //Graficar Thompson
-        for(int i = 0; i < sintactico.tom.size();i++){
-            Thompson temp = sintactico.tom.get(i);
-            temp.dibujar();
-            consola(temp.ID + " generado correctamente.");
-        }
         
         
-        
-        
-        //Graficar Arboles
-        for(int i = 0; i < sintactico.arb.size();i++){
-            Arbol temp =  sintactico.arb.get(i);
-            temp.dibujar();
-        }
-       
-        //Graficar Follows
-        for(int i = 0; i < sintactico.fow.size();i++){
-            Follows temp = sintactico.fow.get(i);
-            temp.dibujar();
-        }
+        consola("--------------------------------------------------------------------------------------------");
         actualizar(); 
     }//GEN-LAST:event_GenerarActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        if(!actual.isEmpty()){
+            if(pos < tamaño){
+                pos++;
+                if(pos == tamaño){
+                    pos = 0;
+                }
+                try {
+                    File temp = actual.get(pos);
+                    BufferedImage img = ImageIO.read(temp.getAbsoluteFile());
+                    imagen.setSize(img.getWidth(), img.getHeight());
+                    imagen.setIcon(new ImageIcon(img)); 
+
+                } catch (IOException ex) {
+                    System.out.println("Error");
+                }
+            }
+            
+        }else{
+            imagen.setIcon(null);
+                    
+        }
+        
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        //Manejo de Validaciones
+        String t = "[\n";
+            for(int i = 0; i < val.size();i++){
+                Validar temp = val.get(i);
+                boolean aceptar = temp.auto.validar(temp.cadena);
+                t += "\t{\n";
+                t += "\t\t\"Valor\": " + temp.cadena + "\n" ;
+                t += "\t\t\"ExpresionRegular\": " + temp.auto.ID + "\n" ;
+                if(aceptar){
+                    t += "\t\t\"Resultado\": Aceptada\n";
+                    consola(temp.cadena + " aceptada");
+                }else{
+                    t += "\t\t\"Resultado\": Rechazada\n";
+                    consola(temp.cadena + " rechazada");
+                }
+                if(i == (val.size()-1)){
+                    t += "\t}\n";
+                }else{
+                    t += "\t},\n";
+                }
+
+            }
+        t += "\n]";
+        FileWriter fichero = null;
+        PrintWriter p = null;
+        String nombre= "";
+        if(ban == 1){
+            nombre = f.getName();
+            nombre = nombre.substring(0, nombre.length()-4);
+        }else{
+            nombre = "Default";
+        }
+        try{
+            fichero  = new FileWriter("Reportes/SALIDAS_201909035/"+nombre+".json");
+            p = new PrintWriter(fichero);
+            p.write(t);
+            p.close();
+            fichero.close();
+        
+        }catch(Exception e){
+            System.out.print(e.getMessage());
+            
+        }finally{
+            if (p!= null){
+                p.close();
+            }
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -440,10 +797,35 @@ public class Main extends javax.swing.JFrame {
         modelo = new DefaultTreeModel(raiz);
         crear(fichero, raiz);
         Archivos.setModel(modelo);
+        
+        //Actualizar listas de imagenes
+        arbol = new LinkedList<>();
+        Collections.addAll(arbol, archivos("Reportes/ARBOLES_201909035/"));
+        
+        transicion = new LinkedList<>();
+        Collections.addAll(transicion, archivos("Reportes/TRANSICIONES_201909035/"));
+        
+        siguiente = new LinkedList<>();
+        Collections.addAll(siguiente, archivos("Reportes/SIGUIENTES_201909035/"));
+        
+        afd = new LinkedList<>();
+        Collections.addAll(afd, archivos("Reportes/AFD_201909035/"));
+        
+        afnd = new LinkedList<>();
+        Collections.addAll(afnd, archivos("Reportes/AFND_201909035/"));
+        
     }
     
     private void crear(File dir, DefaultMutableTreeNode nodo){
-        File[] archivos =dir.listFiles();
+        File[] archivos =dir.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                return pathname.getName().toLowerCase().endsWith(".png")
+                        ||pathname.getName().toLowerCase().endsWith(".json")
+                        || pathname.isDirectory();
+            }
+        }
+        );
         if(archivos != null){
             int c = 0;
             for(File f:archivos){
@@ -456,13 +838,24 @@ public class Main extends javax.swing.JFrame {
             }
         }
     }
+    private File[] archivos(String ruta){
+        File a = new File (ruta);
+        File[] lista = a.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                return pathname.getName().toLowerCase().endsWith(".png");
+            }
+        }
+        );
+        return lista;
+    }
+    
     
     private void consola(String a){
         String temp = "";
         temp += Consola.getText() + "\n";
         temp += a;
         Consola.setText(temp);
-        
     }
     
     
@@ -471,6 +864,15 @@ public class Main extends javax.swing.JFrame {
     private DefaultTreeModel modelo;
     private File f;
     public static int ban = 0; //Determina si hay una imagen cargada 
+    public int pos = 0;
+    public int tamaño = 0;
+    public ArrayList<Validar> val = new ArrayList<>();    //Lista de validaciones
+    public LinkedList<File> arbol = new LinkedList<>();
+    public LinkedList<File> transicion = new LinkedList<>();
+    public LinkedList<File> siguiente = new LinkedList<>();
+    public LinkedList<File> afd = new LinkedList<>();
+    public LinkedList<File> afnd = new LinkedList<>();
+    public LinkedList<File> actual = new LinkedList<>();  //Donde se aloja lo que se esta mostrando en pantalla
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem Abrir;
     private javax.swing.JTree Archivos;
@@ -480,7 +882,9 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem GuardarComo;
     private javax.swing.JMenuItem JSON;
     private javax.swing.JMenu Menu;
+    private javax.swing.JScrollPane Panel;
     private javax.swing.JTextArea Texto;
+    private javax.swing.JLabel imagen;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -488,7 +892,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
