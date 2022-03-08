@@ -1,4 +1,0 @@
-digraph G
-{
-node [ shape=record]
-a[label = "{Hoja|Terminal|Siguiente}|{1|digito|2 }|{2|\".\"|3 }|{3|digito|3 4 }"]}

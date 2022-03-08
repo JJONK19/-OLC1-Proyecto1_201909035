@@ -1,21 +1,21 @@
 digraph G
 {
 node [ shape=record ];
-"7d3e296f-64d1-4939-9bf6-1f512612ab75"[ label="(1)| {F|.|-} |(4)"];
-"01909aa7-16d1-44ad-8d41-37b7e1c26ee9"[ label="(1)| {F|.|-} |(3)"];
-"ddcc256e-5f55-4957-b619-ec5b2dcff5e2"[ label="(1)| {F|+|-} |(1)"];
-"24abd84b-f684-47bf-834b-40c08da4e130"[ label="(1)| {F|digito|1} |(1)"];
-"d941f7a3-7baa-4933-8bad-3b4c2ac35046"[ label="(2)| {F|.|-} |(3)"];
-"7471ac51-a04b-40c3-b9e4-c401c4915ab3"[ label="(2)| {F|\".\"|2} |(2)"];
-"865145ba-28f6-4079-80ac-5a6e2e3ed57f"[ label="(3)| {F|+|-} |(3)"];
-"13205916-6c97-4cd4-a72c-1f61ca90ee03"[ label="(3)| {F|digito|3} |(3)"];
-"98e64a42-6ac2-441e-8a55-4547b5c1ff35"[ label="(4)| {F|$|4} |(4)"];
-"7d3e296f-64d1-4939-9bf6-1f512612ab75"->"01909aa7-16d1-44ad-8d41-37b7e1c26ee9"[minlen=2 ];
-"7d3e296f-64d1-4939-9bf6-1f512612ab75"->"98e64a42-6ac2-441e-8a55-4547b5c1ff35"[minlen=2 ];
-"01909aa7-16d1-44ad-8d41-37b7e1c26ee9"->"ddcc256e-5f55-4957-b619-ec5b2dcff5e2"[minlen=2 ];
-"01909aa7-16d1-44ad-8d41-37b7e1c26ee9"->"d941f7a3-7baa-4933-8bad-3b4c2ac35046"[minlen=2 ];
-"ddcc256e-5f55-4957-b619-ec5b2dcff5e2"->"24abd84b-f684-47bf-834b-40c08da4e130"[minlen=2 ];
-"d941f7a3-7baa-4933-8bad-3b4c2ac35046"->"7471ac51-a04b-40c3-b9e4-c401c4915ab3"[minlen=2 ];
-"d941f7a3-7baa-4933-8bad-3b4c2ac35046"->"865145ba-28f6-4079-80ac-5a6e2e3ed57f"[minlen=2 ];
-"865145ba-28f6-4079-80ac-5a6e2e3ed57f"->"13205916-6c97-4cd4-a72c-1f61ca90ee03"[minlen=2 ];
+"b3d7d6da-c02b-4277-99b7-da69f5610940"[ label="(1)| {F|.|-} |(4)"];
+"93b1b3af-884f-45db-9fb6-736bf12f4d7b"[ label="(1)| {F|.|-} |(3)"];
+"87efff2c-8d5c-4319-912b-23e53e45a720"[ label="(1)| {F|+|-} |(1)"];
+"99c5f598-f59a-4ec7-8c8e-8e005633b422"[ label="(1)| {F|digito|1} |(1)"];
+"864b1ec8-e28a-4e4c-b7bd-195b10103115"[ label="(2)| {F|.|-} |(3)"];
+"0118bfd4-7d8a-43c3-a8ff-e1b9c9548d65"[ label="(2)| {F|\".\"|2} |(2)"];
+"23b521d5-5e28-47a8-a9f3-f064f8c20b32"[ label="(3)| {F|+|-} |(3)"];
+"4a2e4590-116b-4177-b17a-2f335633e389"[ label="(3)| {F|digito|3} |(3)"];
+"9654193e-37c0-4a90-a716-e444c3a8b9b9"[ label="(4)| {F|$|4} |(4)"];
+"b3d7d6da-c02b-4277-99b7-da69f5610940"->"93b1b3af-884f-45db-9fb6-736bf12f4d7b"[minlen=2 ];
+"b3d7d6da-c02b-4277-99b7-da69f5610940"->"9654193e-37c0-4a90-a716-e444c3a8b9b9"[minlen=2 ];
+"93b1b3af-884f-45db-9fb6-736bf12f4d7b"->"87efff2c-8d5c-4319-912b-23e53e45a720"[minlen=2 ];
+"93b1b3af-884f-45db-9fb6-736bf12f4d7b"->"864b1ec8-e28a-4e4c-b7bd-195b10103115"[minlen=2 ];
+"87efff2c-8d5c-4319-912b-23e53e45a720"->"99c5f598-f59a-4ec7-8c8e-8e005633b422"[minlen=2 ];
+"864b1ec8-e28a-4e4c-b7bd-195b10103115"->"0118bfd4-7d8a-43c3-a8ff-e1b9c9548d65"[minlen=2 ];
+"864b1ec8-e28a-4e4c-b7bd-195b10103115"->"23b521d5-5e28-47a8-a9f3-f064f8c20b32"[minlen=2 ];
+"23b521d5-5e28-47a8-a9f3-f064f8c20b32"->"4a2e4590-116b-4177-b17a-2f335633e389"[minlen=2 ];
 }
